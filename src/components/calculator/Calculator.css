@@ -1,0 +1,14 @@
+.button {
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    box-sizing: border-box;
+    border: 1px green solid;
+    min-width: 30px;
+    margin: 1px;
+    cursor: pointer;
+}
+
+.button-row {
+
+}
