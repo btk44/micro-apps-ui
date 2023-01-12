@@ -8,22 +8,24 @@ export default function Calculator() {
     ['1', '2', '3', '+'],
     ['?', '0', '.', '=']
   ]
+
+  function buttonClicked(event){
+    console.log(event.target.innerHTML)
+  }
   
-  const button = (text) => ( 
-    <div className="button">
-      { text }
-    </div>
-  )
-
-  const buttonRow = (buttons) => (
-    <div className="buttons-row">
-      { buttons.map(x => button(x)) }
-    </div>
-  )
-
   return (
     <div className="calculator-component">
-      { buttonsTable.map(x => buttonRow(x)) }
+    { buttonsTable.map(buttonRow =>
+        <div className="buttons-row">
+          { buttonRow.map(buttonText => 
+              <button className="button" onClick={buttonClicked}>
+                { buttonText }
+              </button>
+            )
+          }
+        </div>
+      )
+    }
     </div>
   )  
 }
