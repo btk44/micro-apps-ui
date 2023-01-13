@@ -1,11 +1,22 @@
+import { useState } from 'react'
 import './Calculator.css'
+import MathSybols from './MathSymbols'
 
 export default function Calculator() {
-  const mathSymbols = ['÷','×','−','+','=']
-  const numbers = ['7','8','9','4','5','6','1','2','3','.','0','C']
+  const clearSymbol = 'C'
+  const mathSymbols = [MathSybols.Obelus, MathSybols.Asterisk, MathSybols.Minus,
+                       MathSybols.Plus, MathSybols.Equal]
+  const numbers = ['7','8','9','4','5','6','1','2','3',
+                   MathSybols.Dot,MathSybols.Zero,clearSymbol]
+
+  const [result, setResult] = useState(0);                 
 
   function buttonClicked(event){
     console.log(event.target.innerHTML)
+  }
+
+  function resultChanged(){
+
   }
   
   return (
