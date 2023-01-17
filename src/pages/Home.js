@@ -7,7 +7,7 @@ export default function Home() {
     console.log('home ' + value)
   }
 
-  const [result, setResult] = useState(0)
+  const [result, setResult] = useState('0')
   
   return (
     <div className="home">
