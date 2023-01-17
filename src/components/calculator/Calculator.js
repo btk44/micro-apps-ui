@@ -1,54 +1,55 @@
+import { useState } from 'react'
 import './Calculator.css'
+import MathSymbols from './MathSymbols'
 import MathSybols from './MathSymbols'
 
 export default function Calculator({result, resultChanged}) {
   const clearSymbol = 'C'
-  const mathSymbols = [MathSybols.Obelus, MathSybols.Asterisk, MathSybols.Minus,
-                       MathSybols.Plus, MathSybols.Equal]
-  const mainButtonTexts = ['7','8','9','4','5','6','1','2','3',
-                           MathSybols.Dot,MathSybols.Zero,clearSymbol]
-  const numbers = ['7','8','9','4','5','6','1','2','3',MathSybols.Zero]
+  const mathOperators = [MathSybols.Obelus, MathSybols.Asterisk, MathSybols.Minus,
+                         MathSybols.Plus, MathSybols.Equal]
+  const numericButtonTexts = ['7','8','9','4','5','6','1','2','3',
+                              MathSybols.Dot,MathSybols.Zero,clearSymbol]
+
+  const [calculatorInput, setCalculatorInput] = useState(result)
 
   //let currentOperation = MathSybols.Equal
   //let previousOperation = mathSymbols.Equal
 
-  function buttonClicked(event){
+  function numericButtonClicked(event){
     let value = event.target.innerHTML
-    let localResult = result
     
     if(value === clearSymbol){
-      localResult = 0
+      setCalculatorInput(MathSymbols.Zero)
+    } 
+    else if(value === MathSybols.Dot && calculatorInput.indexOf(MathSybols.Dot) === -1){
+      setCalculatorInput(calculatorInput + value)
+    } else {
+      setCalculatorInput(calculatorInput === MathSymbols.Zero ? value : calculatorInput + value)
     }
 
-    if(numbers.indexOf(value) !== -1){
-      localResult = localResult === 0 ?
-          value : 
-          +(localResult.toString() + value.toString())
-    }
+    resultChanged(calculatorInput)
+  }
 
-    if(value === MathSybols.Dot && localResult.toString().indexOf(MathSybols.Dot) === -1){
-      localResult = localResult + value;
-    }
+  function operatorButtonClicked(event){
 
-    resultChanged(localResult)  // problem wiht zero i.e. 0.0023
   }
   
   return (
     <div className='calculator-component'>
       <div className='display-text'>
-        <input type='text' value={result} readOnly />
+        <input type='text' value={calculatorInput} readOnly />
       </div>
       <div className='numeric-buttons'>
-        { mainButtonTexts.map(buttonText =>
-            <button key={buttonText} className='button numeric-button' onClick={buttonClicked}>
+        { numericButtonTexts.map(buttonText =>
+            <button key={buttonText} className='button numeric-button' onClick={numericButtonClicked}>
               { buttonText }
             </button>
           )
         }
       </div>
       <div className='math-buttons'>
-        { mathSymbols.map(buttonText => 
-            <button key={buttonText} className='button math-button' onClick={buttonClicked}>
+        { mathOperators.map(buttonText => 
+            <button key={buttonText} className='button math-button' onClick={operatorButtonClicked}>
               { buttonText }
             </button>
           )
