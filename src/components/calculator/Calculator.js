@@ -17,10 +17,7 @@ export default function Calculator({initialValue, updateValue}) {
     operatorActivated: false
   })
 
-  useEffect(() => { 
-    updateValue(calculatorState.result)   // this is called twice of 3 times, why?
-    console.log("update! " + calculatorState.result)
-  }, [calculatorState.result, updateValue])
+  useEffect(() => { updateValue(calculatorState.result); console.log('test') }, [updateValue, calculatorState.result])
 
   function numericButtonClicked(event){
     event.preventDefault()
