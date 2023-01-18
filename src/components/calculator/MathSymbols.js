@@ -5,7 +5,8 @@ const MathSymbols = {
     Minus: '-',
     Equal: '=',
     Dot: '.',
-    Zero: '0'
+    Zero: '0',
+    Infinity: '∞'
 }
 
 export default MathSymbols

@@ -1,43 +1,82 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './Calculator.css'
 import MathSymbols from './MathSymbols'
 import MathSybols from './MathSymbols'
 
-export default function Calculator({result, resultChanged}) {
+export default function Calculator({initialValue, updateValue}) {
   const clearSymbol = 'C'
   const mathOperators = [MathSybols.Obelus, MathSybols.Asterisk, MathSybols.Minus,
                          MathSybols.Plus, MathSybols.Equal]
   const numericButtonTexts = ['7','8','9','4','5','6','1','2','3',
                               MathSybols.Dot,MathSybols.Zero,clearSymbol]
+  
+  const [calculatorState, setCalculatorState] = useState({
+    result: +initialValue,
+    resultText: initialValue,
+    lastOperation: MathSymbols.Equal,
+    operatorActivated: false
+  })
 
-  const [calculatorInput, setCalculatorInput] = useState(result)
-
-  //let currentOperation = MathSybols.Equal
-  //let previousOperation = mathSymbols.Equal
+  useEffect(() => { 
+    updateValue(calculatorState.result)   // this is called twice of 3 times, why?
+    console.log("update! " + calculatorState.result)
+  }, [calculatorState.result, updateValue])
 
   function numericButtonClicked(event){
-    let value = event.target.innerHTML
-    
-    if(value === clearSymbol){
-      setCalculatorInput(MathSymbols.Zero)
-    } 
-    else if(value === MathSybols.Dot && calculatorInput.indexOf(MathSybols.Dot) === -1){
-      setCalculatorInput(calculatorInput + value)
-    } else {
-      setCalculatorInput(calculatorInput === MathSymbols.Zero ? value : calculatorInput + value)
+    event.preventDefault()
+    const buttonText = event.target.innerHTML
+    const lastResultText = calculatorState.operatorActivated ? '0' : calculatorState.resultText
+    let newResultText = '0'
+    let newResult = 0
+
+    switch(buttonText){
+      case clearSymbol: break
+      case MathSybols.Dot:
+        newResultText = lastResultText + (lastResultText.indexOf(MathSybols.Dot) === -1 ? MathSybols.Dot : '')
+        newResult = calculatorState.result
+        break
+      default: 
+        newResultText = lastResultText === MathSybols.Zero ? buttonText : lastResultText + buttonText
+        newResult = calculatorState.lastOperation !== MathSybols.Equal ? calculatorState.result : +newResultText
+        break
     }
 
-    resultChanged(calculatorInput)
+    setCalculatorState({
+      result: newResult,
+      resultText: newResultText,
+      lastOperation: calculatorState.lastOperation,
+      operatorActivated: false
+    })
   }
 
   function operatorButtonClicked(event){
+    event.preventDefault()
+    const operator = event.target.innerHTML
+    let newResult = 0
+    
+    switch(calculatorState.lastOperation){
+      case MathSymbols.Equal: newResult = +calculatorState.resultText; break
+      case MathSymbols.Plus: newResult = calculatorState.result + +calculatorState.resultText; break
+      case MathSymbols.Minus: newResult = calculatorState.result - +calculatorState.resultText; break
+      case MathSymbols.Asterisk: newResult = calculatorState.result * +calculatorState.resultText; break
+      case MathSymbols.Obelus: newResult = calculatorState.result / +calculatorState.resultText; break
+      default: return
+    }
 
+    newResult = newResult > 0 ? newResult : 0
+
+    setCalculatorState({
+      result: newResult,
+      resultText: isFinite(newResult) ? newResult.toString() : MathSybols.Infinity,
+      operatorActivated: true,
+      lastOperation: operator
+    })
   }
-  
+
   return (
     <div className='calculator-component'>
       <div className='display-text'>
-        <input type='text' value={calculatorInput} readOnly />
+        <input type='text' value={calculatorState.resultText} readOnly />
       </div>
       <div className='numeric-buttons'>
         { numericButtonTexts.map(buttonText =>
