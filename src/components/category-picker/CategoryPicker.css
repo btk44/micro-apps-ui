@@ -1,13 +1,26 @@
+.category-picker {
+    display: block;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+}
+
 .category {
     padding: 5px;
     margin: 0;
-    display: inline-block;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .icon {
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     border-radius: 50%;
-    max-width: 80px;
-    padding: 6px;
+    max-width: 100px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.description {
+   
 }
