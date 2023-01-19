@@ -14,7 +14,8 @@ export default function Calculator({initialValue, updateValue}) {
     result: +initialValue,
     resultText: initialValue,
     lastOperation: MathSymbols.Equal,
-    operatorActivated: false
+    operatorActivated: false,
+    isInitialValue: true
   })
 
   useEffect(() => { updateValue(calculatorState.result); console.log('test') }, [updateValue, calculatorState.result])
@@ -33,7 +34,7 @@ export default function Calculator({initialValue, updateValue}) {
         newResult = calculatorState.result
         break
       default: 
-        newResultText = lastResultText === MathSybols.Zero ? buttonText : lastResultText + buttonText
+        newResultText = lastResultText === MathSybols.Zero || calculatorState.isInitialValue ? buttonText : lastResultText + buttonText
         newResult = calculatorState.lastOperation !== MathSybols.Equal ? calculatorState.result : +newResultText
         break
     }
@@ -42,7 +43,8 @@ export default function Calculator({initialValue, updateValue}) {
       result: newResult,
       resultText: newResultText,
       lastOperation: calculatorState.lastOperation,
-      operatorActivated: false
+      operatorActivated: false,
+      isInitialValue: false
     })
   }
 
@@ -66,15 +68,14 @@ export default function Calculator({initialValue, updateValue}) {
       result: newResult,
       resultText: isFinite(newResult) ? newResult.toString() : MathSybols.Infinity,
       operatorActivated: true,
-      lastOperation: operator
+      lastOperation: operator,
+      isInitialValue: false
     })
   }
 
   return (
     <div className='calculator-component'>
-      <div className='display-text'>
-        <input type='text' value={calculatorState.resultText} readOnly />
-      </div>
+      <input type='text' value={calculatorState.resultText} readOnly className='display-text'/>
       <div className='numeric-buttons'>
         { numericButtonTexts.map(buttonText =>
             <button key={buttonText} className='button numeric-button' onClick={numericButtonClicked}>

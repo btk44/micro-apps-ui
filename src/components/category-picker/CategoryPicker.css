@@ -1,0 +1,13 @@
+.category {
+    padding: 5px;
+    margin: 0;
+    display: inline-block;
+    text-align: center;
+}
+
+.icon {
+    border: 1px solid transparent;
+    border-radius: 50%;
+    max-width: 80px;
+    padding: 6px;
+}
