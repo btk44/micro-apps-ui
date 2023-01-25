@@ -5,52 +5,47 @@ import { useState } from 'react'
 export default function CategoryPicker({initialValue, updateValue}) {
 
   const categoriesSource = DummyCategories
-  const [categories, setCategories] = useState({
-    categoriesListHtml: getCategoriesListHtml(getCategoriesByParentId(0)),
-    parentCategoryId: -1
-  })
+  const [categories, setCategories] = useState(getCategoriesByParentId(0))
 
   function getCategoriesByParentId(parentId){
     return categoriesSource.filter(category => category.parentId === parentId)
   }
 
+  function hasChildCategories(categoryId){
+    return categoriesSource.some(category => category.parentId === categoryId)
+  }
+
   function onCategorySelect(categoryId, categoryParentId){
-    setCategories({
-      categoriesListHtml: getCategoriesListHtml(getCategoriesByParentId(categoryId)),
-      parentCategoryId: categoryParentId
-    })
+    if(!hasChildCategories(categoryId))
+      return
+
+    setCategories(getCategoriesByParentId(categoryId))
   }
   
   function onBack(){
-    if(categories.parentCategoryId === -1)
+    const parentCategoryId = categories.length ? categories[0].parentId : null
+    if(parentCategoryId === null)
       return
 
-    const previousCategories = getCategoriesByParentId(categories.parentCategoryId)
-    const previousCategoryId = previousCategories[0].parentId
+    const grandParentCategoryId = categoriesSource.filter(category => category.id === parentCategoryId)[0].parentId
+    const previousCategories = getCategoriesByParentId(grandParentCategoryId)
     
-    setCategories({
-      categoriesListHtml: previousCategories,
-      parentCategoryId: previousCategoryId === 0 ? -1 : previousCategoryId 
-    })
+    setCategories(previousCategories)
   }
 
-  function getCategoriesListHtml(categoriesList){
-    return (
-        <ul className='category-picker'>
-          <li className='category' key={-1} onClick={onBack}>
-            <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: 'black'}}/>
-            <div className='description'>back</div>
-          </li>
-          { categoriesList.map(category => 
-              <li className='category' key={category.id} onClick={() => onCategorySelect(category.id, category.parentId)}>
-                <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: category.color}}/>
-                <div className='description'>{ category.name }</div>
-              </li>
-            )
-          }
-        </ul>
-      )
-  }
-
-  return categories.categoriesListHtml
+  return (
+    <ul className='category-picker'>
+      <li className='category' key={-1} onClick={onBack}>
+        <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: 'black'}}/>
+        <div className='description'>back</div>
+      </li>
+      { categories.map(category => 
+          <li className='category' key={category.id} onClick={() => onCategorySelect(category.id, category.parentId)}>
+            <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: category.color}}/>
+            <div className='description'>{ category.name }</div>
+          </li> 
+        )
+      }
+    </ul>
+  )
 }
