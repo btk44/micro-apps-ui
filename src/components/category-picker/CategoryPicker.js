@@ -5,7 +5,10 @@ import { useState } from 'react'
 export default function CategoryPicker({initialValue, updateValue}) {
 
   const categoriesSource = DummyCategories
-  const [categories, setCategories] = useState(getCategoriesByParentId(0))
+  const [categories, setCategories] = useState({
+    activeList: getCategoriesByParentId(initialValue),
+    selected: initialValue
+  })
 
   function getCategoriesByParentId(parentId){
     return categoriesSource.filter(category => category.parentId === parentId)
@@ -15,22 +18,27 @@ export default function CategoryPicker({initialValue, updateValue}) {
     return categoriesSource.some(category => category.parentId === categoryId)
   }
 
-  function onCategorySelect(categoryId, categoryParentId){
-    if(!hasChildCategories(categoryId))
-      return
-
-    setCategories(getCategoriesByParentId(categoryId))
+  function onCategorySelect(categoryId){
+    updateValue(categoryId)
+    setCategories({
+      activeList: hasChildCategories(categoryId) ? getCategoriesByParentId(categoryId) : categories.activeList,
+      selected: categoryId
+    })
   }
   
   function onBack(){
-    const parentCategoryId = categories.length ? categories[0].parentId : null
-    if(parentCategoryId === null)
+    const parentCategoryId = categories.activeList.length ? categories.activeList[0].parentId : null
+    if(parentCategoryId === 0)
       return
 
     const grandParentCategoryId = categoriesSource.filter(category => category.id === parentCategoryId)[0].parentId
     const previousCategories = getCategoriesByParentId(grandParentCategoryId)
     
-    setCategories(previousCategories)
+    updateValue(parentCategoryId)
+    setCategories({
+      activeList: previousCategories,
+      selected: parentCategoryId
+    })
   }
 
   return (
@@ -39,8 +47,9 @@ export default function CategoryPicker({initialValue, updateValue}) {
         <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: 'black'}}/>
         <div className='description'>back</div>
       </li>
-      { categories.map(category => 
-          <li className='category' key={category.id} onClick={() => onCategorySelect(category.id, category.parentId)}>
+      { categories.activeList.map(category => 
+          <li className={`category ${categories.selected === category.id ? 'selected' : ''}`} 
+              key={category.id} onClick={() => onCategorySelect(category.id)}>
             <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: category.color}}/>
             <div className='description'>{ category.name }</div>
           </li> 

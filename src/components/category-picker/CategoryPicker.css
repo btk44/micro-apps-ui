@@ -13,6 +13,10 @@
     box-sizing: border-box;
 }
 
+.selected {
+    background-color: aqua;
+}
+
 .icon {
     border: 2px solid transparent;
     border-radius: 50%;
