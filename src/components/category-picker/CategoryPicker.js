@@ -52,6 +52,7 @@ export default function CategoryPicker({initialValue, updateValue}) {
               key={category.id} onClick={() => onCategorySelect(category.id)}>
             <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: category.color}}/>
             <div className='description'>{ category.name }</div>
+            <div className={`childrenButton ${hasChildCategories(category.id) ? '' : 'hidden'}`}>&#8250;</div>
           </li> 
         )
       }
