@@ -2,11 +2,16 @@
 //import Calculator from "../components/calculator/Calculator";
 
 import { useState } from "react";
-import CategoryPicker from "../components/category-picker/CategoryPicker";
+//import CategoryPicker from "../components/category-picker/CategoryPicker";
+import DummyCategories from "../components/category-picker/DummyCategories";
+import ItemPicker from "../components/item-picker/ItemPicker";
+
+
 
 export default function Home() {
   //const [amount, setAmount] = useState('10')
   const [categoryId, setCategoryId] = useState(0)
+  const categories = DummyCategories
 
   function categoryIdChange(newId){
     setCategoryId(newId)
@@ -21,9 +26,14 @@ export default function Home() {
           initialValue={amount}
           updateValue={setAmount}></Calculator> */}
 
-          <CategoryPicker 
+          {/* <CategoryPicker 
             initialValue={categoryId}
-            updateValue={categoryIdChange}></CategoryPicker>
+            updateValue={categoryIdChange}></CategoryPicker> */}
+
+          <ItemPicker 
+            initialValue={categoryId}
+            updateValue={categoryIdChange}
+            sourceItemList={categories}></ItemPicker>
       </div>
     </div>
   );

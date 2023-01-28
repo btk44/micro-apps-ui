@@ -1,0 +1,38 @@
+.item-picker {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.item {
+    box-sizing: border-box;
+    border-bottom: 1px solid lightgray;
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+.selected {
+    background-color: aqua;
+}
+
+.icon {
+    grid-column: 1fr;
+    max-width: 60px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.description {
+   grid-column: 5fr;
+}
+
+.childrenButton {
+    grid-column: 1fr;
+}
+
+.hidden {
+    display: none;
+}
