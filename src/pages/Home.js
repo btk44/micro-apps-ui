@@ -3,19 +3,26 @@
 
 import { useState } from "react";
 //import CategoryPicker from "../components/category-picker/CategoryPicker";
-import DummyCategories from "../components/category-picker/DummyCategories";
-import ItemPicker from "../components/item-picker/ItemPicker";
+import { CategoriesTree } from "../components/category-picker/DummyCategories";
+import ItemPicker2 from "../components/item-picker/ItemPicker2";
 
 
 
 export default function Home() {
   //const [amount, setAmount] = useState('10')
   const [categoryId, setCategoryId] = useState(0)
-  const categories = DummyCategories
+  const categoriesTree = CategoriesTree
+  const [showPicker, setShowPicker] = useState(false)
 
-  function categoryIdChange(newId){
-    setCategoryId(newId)
-    console.log(newId)
+  function categoryChange(category){
+    setCategoryId(category.id)
+    console.log(`${categoryId} ->  ${category.id}`)
+    setShowPicker(false)
+  }
+
+  function onCancel(){
+    console.log('cancel')
+    setShowPicker(false)
   }
 
   return (
@@ -30,10 +37,16 @@ export default function Home() {
             initialValue={categoryId}
             updateValue={categoryIdChange}></CategoryPicker> */}
 
-          <ItemPicker 
-            initialValue={categoryId}
-            updateValue={categoryIdChange}
-            sourceItemList={categories}></ItemPicker>
+          <button onClick={() => setShowPicker(true)}>show</button>
+          { showPicker &&
+            <ItemPicker2 
+              onUpdate={categoryChange}
+              onCancel={onCancel}
+              sourceItemList={categoriesTree}
+              parentPropName='parentCategory'
+              childListPropName='childCategories'
+              keyPropName='id'></ItemPicker2>
+          }
       </div>
     </div>
   );

@@ -27,4 +27,30 @@ const DummyCategories = [
     { id: 26, name: 'category 26', parentId: 20, color: '#347aeb', icon: 'sth.svg' }
 ]
 
-export default DummyCategories
+function GetCategoriesTree(){
+    const items = DummyCategories.map(x => CreateItem(x))
+
+    items.forEach(x => {
+        const parentCategoryList = items.filter(y => y.id === x.parentId)
+        x.childCategories = items.filter(y => y.parentId === x.id)
+        x.parentCategory = parentCategoryList.length ? parentCategoryList[0] : null
+    })
+    
+    return items.filter(x => x.parentId === 0)
+}
+
+function CreateItem(x){
+    return {
+        id: x.id, 
+        name: x.name, 
+        parentId: x.parentId, 
+        color: x.color, 
+        icon: x.icon,
+        parentCategory: null,
+        childCategories: null
+    }
+}
+
+const CategoriesTree = GetCategoriesTree()
+
+export { DummyCategories, CategoriesTree }
