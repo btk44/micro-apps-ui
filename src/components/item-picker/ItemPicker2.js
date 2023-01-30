@@ -3,14 +3,13 @@ import { useState } from 'react'
 
 export default function ItemPicker2({onUpdate, onCancel, sourceItemList, parentPropName, childListPropName, keyPropName}) {
 
-//   const nestedItemsMode = parentPropName && childListPropName && 
-//                           sourceItemList.some(x => x[parentPropName] != null) &&
-//                           sourceItemList.some(x => x[childListPropName].length)
+  const nestedItemsMode = parentPropName && childListPropName && 
+                          sourceItemList.some(x => x[childListPropName].length)
 
   const [items, setItems] = useState(sourceItemList)
 
   function hasChildItems(item){
-    return item[childListPropName].length
+    return !!(nestedItemsMode && item[childListPropName].length)
   }
 
   function onItemSelect(item){
@@ -21,7 +20,7 @@ export default function ItemPicker2({onUpdate, onCancel, sourceItemList, parentP
   }
   
   function onBack(){
-    const parentItem = items[0][parentPropName]
+    const parentItem = nestedItemsMode ? items[0][parentPropName] : null
     if(!parentItem)
       onCancel() // and close this picker
     else
@@ -39,7 +38,7 @@ export default function ItemPicker2({onUpdate, onCancel, sourceItemList, parentP
               key={item[keyPropName]} onClick={() => onItemSelect(item)}>
             <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: item.color}}/>
             <div className='description'>{ item.name }</div>
-            <div className={`childrenButton ${hasChildItems(item) ? '' : 'hidden'}`}>&#8250;</div>
+            {hasChildItems(item) && <div className='childrenButton'>&#8250;</div> }
           </li> 
         )
       }
