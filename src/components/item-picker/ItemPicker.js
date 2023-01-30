@@ -1,7 +1,7 @@
 import './ItemPicker.css'
 import { useState } from 'react'
 
-export default function ItemPicker2({onUpdate, onCancel, sourceItemList, parentPropName, childListPropName, keyPropName}) {
+export default function ItemPicker({onUpdate, onCancel, sourceItemList, parentPropName, childListPropName, keyPropName}) {
 
   const nestedItemsMode = parentPropName && childListPropName && 
                           sourceItemList.some(x => x[childListPropName].length)

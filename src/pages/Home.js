@@ -2,9 +2,8 @@
 //import Calculator from "../components/calculator/Calculator";
 
 import { useState } from "react";
-//import CategoryPicker from "../components/category-picker/CategoryPicker";
 import { CategoriesTree } from "../components/category-picker/DummyCategories";
-import ItemPicker2 from "../components/item-picker/ItemPicker2";
+import ItemPicker from "../components/item-picker/ItemPicker";
 
 
 
@@ -33,19 +32,15 @@ export default function Home() {
           initialValue={amount}
           updateValue={setAmount}></Calculator> */}
 
-          {/* <CategoryPicker 
-            initialValue={categoryId}
-            updateValue={categoryIdChange}></CategoryPicker> */}
-
           <button onClick={() => setShowPicker(true)}>show</button>
           { showPicker &&
-            <ItemPicker2 
+            <ItemPicker 
               onUpdate={categoryChange}
               onCancel={onCancel}
               sourceItemList={categoriesTree}
               parentPropName='parentCategory'
               childListPropName='childCategories'
-              keyPropName='id'></ItemPicker2>
+              keyPropName='id'></ItemPicker>
           }
       </div>
     </div>
