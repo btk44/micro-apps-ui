@@ -1,4 +1,4 @@
-import './ItemPicker.css'
+import './ItemPicker.scss'
 import { useState } from 'react'
 
 export default function ItemPicker({onUpdate, onCancel, sourceItemList, parentPropName, childListPropName, keyPropName}) {

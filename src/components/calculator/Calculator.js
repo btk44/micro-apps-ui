@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import './Calculator.css'
+import './Calculator.scss'
 import MathSymbols from './MathSymbols'
 import MathSybols from './MathSymbols'
 
