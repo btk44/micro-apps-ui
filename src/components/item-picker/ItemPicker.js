@@ -28,20 +28,21 @@ export default function ItemPicker({onUpdate, onCancel, sourceItemList, parentPr
   }
 
   return (
-    <ul className='item-picker'>
-      <li className='item' key={-1} onClick={onBack}>
-        <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: 'black'}}/>
-        <div className='description'>back</div>
-      </li>
-      { items.map(item => 
-          <li className='item'
-              key={item[keyPropName]} onClick={() => onItemSelect(item)}>
-            <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: item.color}}/>
-            <div className='description'>{ item.name }</div>
-            {hasChildItems(item) && <div className='childrenButton'>&#8250;</div> }
-          </li> 
-        )
-      }
-    </ul>
+    <div className='item-picker'>
+      <ul className='item-list'>
+        { items.map(item => 
+            <li className='item'
+                key={item[keyPropName]} onClick={() => onItemSelect(item)}>
+              <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: item.color}}/>
+              <div className='description'>{ item.name }</div>
+              {hasChildItems(item) && <div className='childrenButton'>&#8250;</div> }
+            </li> 
+          )
+        }
+      </ul>
+      <button onClick={onBack}>back</button>
+    </div>
+
+
   )
 }
