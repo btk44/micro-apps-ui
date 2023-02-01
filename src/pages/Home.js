@@ -3,7 +3,7 @@ import { useState } from "react";
 import { CategoriesTree } from "../fake-data/DummyCategories";
 import ItemPicker from "../components/item-picker/ItemPicker";
 import DummyAccounts from "../fake-data/DummyAccounts";
-import './Home.css'
+import './Home.scss'
 
 
 
@@ -51,11 +51,13 @@ export default function Home() {
 
   return (
     <div className="home">
-      <button onClick={showCategoryPick}>pick other category than: {transaction.categoryId}</button>
-      <button onClick={showAccountPick}>pick other account than: {transaction.accountId}</button>
-      <Calculator 
+      <div className='buttons'>
+        <button onClick={showCategoryPick}>{ transaction.categoryId ? transaction.categoryId : 'category' }</button>
+        <button onClick={showAccountPick}> { transaction.accountId ? transaction.accountId : 'account' }</button>
+      </div>
+      { false && <Calculator 
         initialValue={transaction.amount}
-        updateValue={onAmountChange}></Calculator>
+        updateValue={onAmountChange}></Calculator> }
       { showModal() &&
         <div className='modal'>
           { windows.showCategoryPicker &&

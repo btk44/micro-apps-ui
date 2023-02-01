@@ -29,13 +29,13 @@ export default function ItemPicker({onUpdate, onCancel, sourceItemList, parentPr
 
   return (
     <div className='item-picker'>
-      <ul className='item-list'>
+      <ul>
         { items.map(item => 
-            <li className='item'
+            <li
                 key={item[keyPropName]} onClick={() => onItemSelect(item)}>
-              <img className='icon' src={require('./icons/icon.svg').default} alt='' style={{borderColor: item.color}}/>
-              <div className='description'>{ item.name }</div>
-              {hasChildItems(item) && <div className='childrenButton'>&#8250;</div> }
+              <img src={require('./icons/icon.svg').default} alt='' style={{borderColor: item.color}}/>
+              <span>{ item.name }</span>
+              {hasChildItems(item) && <span className='children-indicator'>&#8250;</span> }
             </li> 
           )
         }

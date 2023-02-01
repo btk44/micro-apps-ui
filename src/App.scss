@@ -1,6 +1,44 @@
-button {
+// colors:
+$primary-color: #456990;
+$primary-color-dark:#2e4760;
+$primary-color-light: #83a2c3;
+$text-color: white;
+
+// variables:
+$form-control-default-h: 50px;
+
+
+ul, li, div, span, img {
+    margin: 0;
+    padding: 0;
+    font-size: medium;
+    box-sizing: border-box;
+}
+
+input, button {
     width: 100%;
     outline: none;
     border-width: 0;
-    min-height: 50px;
+    height: $form-control-default-h;
+    background-color: $primary-color;
+    cursor: pointer;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: $text-color;
+    font-size: medium;
+    font-family: "Inter",sans-serif;
+    font-variation-settings: "wght" 600;
+    text-align: center;
+    vertical-align: middle;
+}
+
+button {
+    &:active {
+        background-color: $primary-color-dark;
+    }
+}
+
+input {
+
 }
