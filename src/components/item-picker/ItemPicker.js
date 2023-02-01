@@ -28,7 +28,7 @@ export default function ItemPicker({onUpdate, onCancel, sourceItemList, parentPr
   }
 
   return (
-    <div className='item-picker'>
+    <div className='item-picker-component'>
       <ul>
         { items.map(item => 
             <li

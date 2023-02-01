@@ -55,7 +55,7 @@ export default function Home() {
         <button onClick={showCategoryPick}>{ transaction.categoryId ? transaction.categoryId : 'category' }</button>
         <button onClick={showAccountPick}> { transaction.accountId ? transaction.accountId : 'account' }</button>
       </div>
-      { false && <Calculator 
+      { <Calculator 
         initialValue={transaction.amount}
         updateValue={onAmountChange}></Calculator> }
       { showModal() &&

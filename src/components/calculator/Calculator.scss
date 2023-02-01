@@ -1,67 +1,41 @@
+@import '../../App.scss';
+
 .calculator-component {
     width: 100%;
     height: 100%;
     display: grid;
-    box-sizing: border-box;
-    margin: 10px;
     grid-template-columns: 3fr 1fr;
-    grid-template-rows: 2fr 7fr;
+    grid-template-rows: $form-control-default-h 1fr;
     grid-template-areas: 
         "display display"
         "buttons-left buttons-right";
-    font-size: medium;
-}
 
-.display-text{
-    grid-area: display;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    text-align: right;
-    border: 1px solid lightgrey;
-    border-bottom-width: 0;
-    outline: none;
-}
+    span {
+        grid-area: display;
+        text-align: center;
+        line-height: $form-control-default-h;
+        background-color: $primary-color-light;
+        color: $text-color;
+    }
 
-.button {
-    text-align: center;
-    vertical-align: middle;
-    box-sizing: border-box;
-    margin: 1px;
-    cursor: pointer;
-    margin: 0;
-    font-size:large;
-    font-weight: bold;
-    border:0;
-}
+    .numeric-buttons{
+        grid-area: buttons-left;
 
-.numeric-buttons{
-    grid-area: buttons-left;
-}
+        button {
+            display: inline-block;
+            width: 33.33%;
+            height: 25%;
+        }
+    }
 
-.math-buttons{
-    grid-area: buttons-right;
-}
+    .math-buttons{
+        grid-area: buttons-right;
 
-.button:active{
-    background-color: burlywood;
-}
-
-.numeric-button {
-    display: inline-block;
-    width: 33.33%;
-    height: 25%;
-}
-
-.math-button {
-    display: block;
-    width: 100%;
-    height: 20%;
-    background-color: aquamarine;
-    border-left: 1px solid rgb(20, 226, 158);
-}
-
-.button-row {
-    margin: 0;
-    height: 33.33%;
+        button {
+            display: block;
+            height: 20%;
+            background-color: $primary-color-light;
+            border-left: 1px solid $primary-color-dark;
+        }
+    }
 }

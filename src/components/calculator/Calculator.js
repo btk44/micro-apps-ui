@@ -18,7 +18,7 @@ export default function Calculator({initialValue, updateValue}) {
     isInitialValue: true
   })
 
-  useEffect(() => { updateValue(calculatorState.result); console.log('test') }, [updateValue, calculatorState.result])
+//  useEffect(() => { updateValue(calculatorState.result); console.log('test') }, [updateValue, calculatorState.result])
 
   function numericButtonClicked(event){
     event.preventDefault()
@@ -75,18 +75,18 @@ export default function Calculator({initialValue, updateValue}) {
 
   return (
     <div className='calculator-component'>
-      <input type='text' value={calculatorState.resultText} readOnly className='display-text'/>
+      <span>{ calculatorState.resultText }</span>
       <div className='numeric-buttons'>
         { numericButtonTexts.map(buttonText =>
-            <button key={buttonText} className='button numeric-button' onClick={numericButtonClicked}>
+            <button key={buttonText} onClick={numericButtonClicked}>
               { buttonText }
             </button>
           )
         }
       </div>
-      <div className='math-buttons'>
+      <div className='operation-buttons'>
         { mathOperators.map(buttonText => 
-            <button key={buttonText} className='button math-button' onClick={operatorButtonClicked}>
+            <button key={buttonText} onClick={operatorButtonClicked}>
               { buttonText }
             </button>
           )
