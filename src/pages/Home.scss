@@ -10,6 +10,16 @@
     background-color: $primary-color-light;
 }
 
-.buttons button {
-    width: 50%;
+.buttons {
+    border-bottom: 2px solid $primary-color;
+
+    button {
+        width: 50%;
+        border-bottom: 2px solid $primary-color-light;
+    }
+
+    .inactive{
+        background-color: $primary-color-light;
+    }
+
 }

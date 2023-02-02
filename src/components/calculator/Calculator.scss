@@ -1,11 +1,13 @@
 @import '../../App.scss';
 
+$row-height: calc($form-control-default-h*1.5);
+
 .calculator-component {
     width: 100%;
     height: 100%;
     display: grid;
     grid-template-columns: 3fr 1fr;
-    grid-template-rows: $form-control-default-h 1fr;
+    grid-template-rows: $row-height calc($row-height*4);
     grid-template-areas: 
         "display display"
         "buttons-left buttons-right";
@@ -13,9 +15,12 @@
     span {
         grid-area: display;
         text-align: center;
-        line-height: $form-control-default-h;
+        line-height: $row-height;
         background-color: $primary-color-light;
         color: $text-color;
+        border-bottom: 2px solid $primary-color;
+        font-size: x-large;
+        font-weight: 700;
     }
 
     .numeric-buttons{
@@ -28,7 +33,7 @@
         }
     }
 
-    .math-buttons{
+    .operation-buttons{
         grid-area: buttons-right;
 
         button {
