@@ -1,65 +1,58 @@
+import React from 'react';
 import Calculator from '../components/calculator/Calculator';
 import { useState } from 'react';
 import { CategoriesTree } from '../fake-data/DummyCategories';
 import ItemPicker from '../components/item-picker/ItemPicker';
 import DummyAccounts from '../fake-data/DummyAccounts';
 import './Home.scss'
+import { TransactionType } from '../constants/transaction-type';
+import { Transaction } from '../objects/transaction';
+import { Category } from '../objects/category';
+import { Account } from '../objects/account';
 
-const TransactionType = {
-  Expense: 'exp',
-  Income: 'inc',
-  Transfer: 'tra' // maybe in the future
-}
-
-export default function Home() {
+export default function Home(){
   const [pageLayout, setPageLayout] = useState({
     showCategoryPicker: false,
     showAccountPicker: false,
   })
 
-  const [transaction, setTransaction] = useState({
-    accountId: 0,
-    categoryId: 0,
-    amount: 0,
-    date: new Date(),
-    type: TransactionType.Expense
-  })
+  const [transaction, setTransaction] = useState(new Transaction())
 
-  function showModal(){
+  function showModal(): boolean {
     return pageLayout.showAccountPicker || pageLayout.showCategoryPicker
   }
 
-  function closeModal(){
+  function closeModal(): void {
     setPageLayout({ ...pageLayout, showAccountPicker: false, showCategoryPicker: false })
   }
 
-  function showCategoryPick(){
+  function showCategoryPick(): void {
     setPageLayout({ ...pageLayout, showCategoryPicker: true })
   }
 
-  function showAccountPick(){
+  function showAccountPick(): void {
     setPageLayout({ ...pageLayout, showAccountPicker: true })
   }
 
-  function onAmountChange(amount){
+  function onAmountChange(amount: number): void {
     setTransaction({ ...transaction, amount: amount })
   }
 
-  function onTypeChange(type){
+  function onTypeChange(type: TransactionType): void {
     setTransaction({ ...transaction, type: type })
   }
 
-  function onAccountChange(account){
+  function onAccountChange(account: Account): void {
     setTransaction({ ...transaction, accountId: account.id })
     closeModal()
   }
 
-  function categoryChange(category){
+  function categoryChange(category: Category): void {
     setTransaction({ ...transaction, categoryId: category.id })
     closeModal()
   }
 
-  function getDateString() {
+  function getDateString(): string {
     const year = transaction.date.getFullYear()
     let day = (transaction.date.getDate()).toString()
     let month = (transaction.date.getMonth()+1).toString()

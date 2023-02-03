@@ -1,4 +1,6 @@
-const DummyAccounts = [
+import { Account } from "../objects/account"
+
+const DummyAccounts: Account[] = [
     { id: 1, name: 'account 1', color: '#347aeb', icon: 'sth.svg', currency: 'PLN'},
     { id: 2, name: 'account 2', color: '#347aeb', icon: 'sth.svg', currency: 'PLN' },
     { id: 3, name: 'account 3', color: '#347aeb', icon: 'sth.svg', currency: 'EUR' },

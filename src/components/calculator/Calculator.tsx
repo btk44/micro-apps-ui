@@ -1,9 +1,15 @@
+import React from 'react'
 import { useEffect, useState } from 'react'
 import './Calculator.scss'
 import MathSymbols from './MathSymbols'
 import MathSybols from './MathSymbols'
 
-export default function Calculator({initialValue, updateValue}) {
+interface CalculatorProps{
+    initialValue: number
+    updateValue(value: number): void
+}
+
+export default function Calculator(props: CalculatorProps) {
   const clearSymbol = 'C'
   const mathOperators = [MathSybols.Obelus, MathSybols.Asterisk, MathSybols.Minus,
                          MathSybols.Plus, MathSybols.Equal]
@@ -11,8 +17,8 @@ export default function Calculator({initialValue, updateValue}) {
                               MathSybols.Dot,MathSybols.Zero,clearSymbol]
   
   const [calculatorState, setCalculatorState] = useState({
-    result: +initialValue,
-    resultText: initialValue,
+    result: +props.initialValue,
+    resultText: props.initialValue.toString(),
     lastOperation: MathSymbols.Equal,
     operatorActivated: false,
     isInitialValue: true
@@ -20,7 +26,7 @@ export default function Calculator({initialValue, updateValue}) {
 
 //  useEffect(() => { updateValue(calculatorState.result); console.log('test') }, [updateValue, calculatorState.result])
 
-  function numericButtonClicked(event){
+  function numericButtonClicked(event: any){
     event.preventDefault()
     const buttonText = event.target.innerHTML
     const lastResultText = calculatorState.operatorActivated ? '0' : calculatorState.resultText
@@ -48,7 +54,7 @@ export default function Calculator({initialValue, updateValue}) {
     })
   }
 
-  function operatorButtonClicked(event){
+  function operatorButtonClicked(event: any){
     event.preventDefault()
     const operator = event.target.innerHTML
     let newResult = 0

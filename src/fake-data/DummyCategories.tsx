@@ -1,4 +1,6 @@
-const DummyCategories = [
+import { Category } from "../objects/category"
+
+const DummyCategories: any[] = [
     { id: 1, name: 'category 1', parentId: 0, color: '#347aeb', icon: 'sth.svg'},
     { id: 2, name: 'category 2', parentId: 0, color: '#347aeb', icon: 'sth.svg' },
     { id: 3, name: 'category 3', parentId: 0, color: '#347aeb', icon: 'sth.svg' },
@@ -27,7 +29,7 @@ const DummyCategories = [
     { id: 26, name: 'category 26', parentId: 20, color: '#347aeb', icon: 'sth.svg' }
 ]
 
-function GetCategoriesTree(){
+function GetCategoriesTree(): Category[] {
     const items = DummyCategories.map(x => CreateItem(x))
 
     items.forEach(x => {
@@ -39,7 +41,7 @@ function GetCategoriesTree(){
     return items.filter(x => x.parentId === 0)
 }
 
-function CreateItem(x){
+function CreateItem(x: any): Category{
     return {
         id: x.id, 
         name: x.name, 
