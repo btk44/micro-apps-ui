@@ -1,8 +1,29 @@
 // colors:
-$primary-color: #456990;
-$primary-color-dark:#2e4760;
-$primary-color-light: #83a2c3;
-$text-color: white;
+.blue-theme{
+    --primary-color: #456990;
+    --primary-color-dark:#2e4760;
+    --primary-color-light: #83a2c3;
+    --text-color: white;
+}
+
+.red-theme{
+    --primary-color: #A20702;
+    --primary-color-dark:#510301;
+    --primary-color-light: #FD150D;
+    --text-color: white;
+}
+
+.green-theme{
+    --primary-color: #5E8122;
+    --primary-color-dark:#2F4011;
+    --primary-color-light: #98CC3E;
+    --text-color: white;
+}
+
+$primary-color: var(--primary-color);
+$primary-color-dark: var(--primary-color-dark);
+$primary-color-light: var(--primary-color-light);
+$text-color: var(--text-color);
 
 // variables:
 $form-control-default-h: 50px;

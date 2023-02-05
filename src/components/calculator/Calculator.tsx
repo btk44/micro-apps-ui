@@ -1,5 +1,5 @@
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './Calculator.scss'
 import MathSymbols from './MathSymbols'
 import MathSybols from './MathSymbols'
@@ -23,8 +23,6 @@ export default function Calculator(props: CalculatorProps) {
     operatorActivated: false,
     isInitialValue: true
   })
-
-//  useEffect(() => { updateValue(calculatorState.result); console.log('test') }, [updateValue, calculatorState.result])
 
   function numericButtonClicked(event: any){
     event.preventDefault()
@@ -52,6 +50,7 @@ export default function Calculator(props: CalculatorProps) {
       operatorActivated: false,
       isInitialValue: false
     })
+    props.updateValue(newResult)
   }
 
   function operatorButtonClicked(event: any){
@@ -77,6 +76,7 @@ export default function Calculator(props: CalculatorProps) {
       lastOperation: operator,
       isInitialValue: false
     })
+    props.updateValue(newResult)
   }
 
   return (

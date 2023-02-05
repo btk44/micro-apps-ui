@@ -14,6 +14,7 @@ export default function Home(){
   const [pageLayout, setPageLayout] = useState({
     showCategoryPicker: false,
     showAccountPicker: false,
+    theme: 'red-theme'
   })
 
   const [transaction, setTransaction] = useState(new Transaction())
@@ -39,6 +40,7 @@ export default function Home(){
   }
 
   function onTypeChange(type: TransactionType): void {
+    setPageLayout({ ...pageLayout, theme: type === TransactionType.Expense ? 'red-theme' : 'green-theme'})
     setTransaction({ ...transaction, type: type })
   }
 
@@ -47,7 +49,7 @@ export default function Home(){
     closeModal()
   }
 
-  function categoryChange(category: Category): void {
+  function onCategoryChange(category: Category): void {
     setTransaction({ ...transaction, categoryId: category.id })
     closeModal()
   }
@@ -64,7 +66,7 @@ export default function Home(){
   }
 
   return (
-    <div className='home'>
+    <div className={'home ' + pageLayout.theme}>
       <div className='buttons'>
         <button>{ 'Ania' }</button>
         <button> { getDateString() }</button>
@@ -78,11 +80,12 @@ export default function Home(){
       { <Calculator 
         initialValue={transaction.amount}
         updateValue={onAmountChange}></Calculator> }
+        <div>{ transaction.amount }</div>
       { showModal() &&
         <div className='modal'>
           { pageLayout.showCategoryPicker &&
             <ItemPicker 
-              onUpdate={categoryChange}
+              onUpdate={onCategoryChange}
               onCancel={closeModal}
               sourceItemList={CategoriesTree}
               parentPropName='parentCategory'
