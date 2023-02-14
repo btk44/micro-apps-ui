@@ -77,10 +77,10 @@ export default function Home(){
         <button onClick={showCategoryPick}>{ transaction.categoryId ? transaction.categoryId : 'category' }</button>
         <button onClick={showAccountPick}> { transaction.accountId ? transaction.accountId : 'account' }</button>
       </div>
+      <input type='text' placeholder='kto / komu'></input>
       { <Calculator 
         initialValue={transaction.amount}
         updateValue={onAmountChange}></Calculator> }
-        <div>{ transaction.amount }</div>
       { showModal() &&
         <div className='modal'>
           { pageLayout.showCategoryPicker &&
