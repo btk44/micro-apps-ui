@@ -9,6 +9,8 @@ import { TransactionType } from '../constants/transaction-type';
 import { Transaction } from '../objects/transaction';
 import { Category } from '../objects/category';
 import { Account } from '../objects/account';
+import TransactionList from '../components/transaction-list/TransactionList';
+import DummyTransactions from '../fake-data/DummyTransactions';
 
 export default function Home(){
   const [pageLayout, setPageLayout] = useState({
@@ -67,6 +69,10 @@ export default function Home(){
 
   return (
     <div className={'home ' + pageLayout.theme}>
+      <div>
+        <TransactionList transactions={ DummyTransactions }></TransactionList>
+      </div>
+
       <div className='buttons'>
         <button>{ 'Ania' }</button>
         <button> { getDateString() }</button>
