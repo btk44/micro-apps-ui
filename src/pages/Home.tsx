@@ -1,7 +1,7 @@
 import React from 'react';
 import Calculator from '../components/calculator/Calculator';
 import { useState } from 'react';
-import { CategoriesTree } from '../fake-data/DummyCategories';
+import { CategoriesStructure } from '../fake-data/DummyCategories';
 import ItemPicker from '../components/item-picker/ItemPicker';
 import DummyAccounts from '../fake-data/DummyAccounts';
 import './Home.scss'
@@ -17,7 +17,7 @@ export default function Home(){
     theme: 'red-theme'
   })
 
-  const [transaction, setTransaction] = useState(new Transaction())
+  const [transaction, setTransaction] = useState({date: new Date(), amount: 0} as Transaction)
 
   function showModal(): boolean {
     return pageLayout.showAccountPicker || pageLayout.showCategoryPicker
@@ -41,7 +41,7 @@ export default function Home(){
 
   function onTypeChange(type: TransactionType): void {
     setPageLayout({ ...pageLayout, theme: type === TransactionType.Expense ? 'red-theme' : 'green-theme'})
-    setTransaction({ ...transaction, type: type })
+    //setTransaction({ ...transaction, type: type })
   }
 
   function onAccountChange(account: Account): void {
@@ -70,10 +70,10 @@ export default function Home(){
       <div className='buttons'>
         <button>{ 'Ania' }</button>
         <button> { getDateString() }</button>
-        <button className={transaction.type !== TransactionType.Expense ? 'inactive' : ''}
+        {/* <button className={transaction.type !== TransactionType.Expense ? 'inactive' : ''}
                 onClick={() => onTypeChange(TransactionType.Expense)}>expense</button>
         <button className={transaction.type !== TransactionType.Income ? 'inactive' : ''}
-                onClick={() => onTypeChange(TransactionType.Income)}>income</button>
+                onClick={() => onTypeChange(TransactionType.Income)}>income</button> */}
         <button onClick={showCategoryPick}>{ transaction.categoryId ? transaction.categoryId : 'category' }</button>
         <button onClick={showAccountPick}> { transaction.accountId ? transaction.accountId : 'account' }</button>
       </div>
@@ -87,17 +87,20 @@ export default function Home(){
             <ItemPicker 
               onUpdate={onCategoryChange}
               onCancel={closeModal}
-              sourceItemList={CategoriesTree}
-              parentPropName='parentCategory'
+              sourceItemList={CategoriesStructure}
+              //parentPropName='parentCategory'
+              parentPropName='categoryGroupName'
               childListPropName='childCategories'
-              keyPropName='id'></ItemPicker>
+              keyPropName='id'
+              descriptionPropName='name'></ItemPicker>
           }
           { pageLayout.showAccountPicker && 
             <ItemPicker 
               onUpdate={onAccountChange}
               onCancel={closeModal}
               sourceItemList={DummyAccounts}
-              keyPropName='id'></ItemPicker>
+              keyPropName='id'
+              descriptionPropName='name'></ItemPicker>
           }
         </div>
       }

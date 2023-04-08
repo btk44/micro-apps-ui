@@ -9,6 +9,7 @@ interface ItemPickerProps{
   parentPropName?: string
   childListPropName?: string
   keyPropName: string
+  descriptionPropName: string
 }
 
 export default function ItemPicker(props: ItemPickerProps) {
@@ -21,7 +22,7 @@ export default function ItemPicker(props: ItemPickerProps) {
   const [items, setItems] = useState(props.sourceItemList)
 
   function hasChildItems(item: any){
-    return !!(nestedItemsMode && item[childListPropName].length)
+    return !!(nestedItemsMode && item[childListPropName]?.length)
   }
 
   function onItemSelect(item: any){
@@ -33,7 +34,7 @@ export default function ItemPicker(props: ItemPickerProps) {
   
   function onBack(){
     const parentItem = nestedItemsMode ? items[0][parentPropName] : null
-    if(!parentItem)
+    if(parentItem === null || parentItem === undefined)
       props.onCancel() // and close this picker
     else
       setItems(parentItem[parentPropName] ? 
@@ -48,7 +49,7 @@ export default function ItemPicker(props: ItemPickerProps) {
             <li
                 key={item[props.keyPropName]} onClick={() => onItemSelect(item)}>
               <img src={require('./icons/icon.svg').default} alt='' style={{borderColor: item.color}}/>
-              <span>{ item.name }</span>
+              <span>{ item[props.descriptionPropName] }</span>
               {hasChildItems(item) && <span className='children-indicator'>&#8250;</span> }
             </li> 
           )
