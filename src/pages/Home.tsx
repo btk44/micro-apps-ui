@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import Calculator from '../components/calculator/Calculator';
 import { useState } from 'react';
 import { CategoriesStructure } from '../fake-data/DummyCategories';
@@ -11,6 +11,7 @@ import { Category } from '../objects/category';
 import { Account } from '../objects/account';
 import TransactionList from '../components/transaction-list/TransactionList';
 import DummyTransactions from '../fake-data/DummyTransactions';
+import { TransactionService } from '../services/transaction-service';
 
 export default function Home(){
   const [pageLayout, setPageLayout] = useState({
@@ -18,6 +19,13 @@ export default function Home(){
     showAccountPicker: false,
     theme: 'red-theme'
   })
+
+  const [data, setData] = useState({});
+  useEffect(() => {
+    TransactionService.SearchTransactions({amountFrom: 220})
+      .then(json => setData(json))
+      .catch(error => console.error(error));
+  }, []);
 
   const [transaction, setTransaction] = useState({date: new Date(), amount: 0} as Transaction)
 
@@ -63,6 +71,8 @@ export default function Home(){
 
     day = day.length < 2 ? `0${day}` : day
     month = month.length < 2 ? `0${month}` : month
+
+    var t = data;
 
     return `${year}/${month}/${day}`
   }
