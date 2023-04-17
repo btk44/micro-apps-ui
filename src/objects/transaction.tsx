@@ -6,7 +6,6 @@ export interface Transaction {
   amount: number
   categoryId: number
   groupKey: string
-
   payee: string
   comment: string  
 }

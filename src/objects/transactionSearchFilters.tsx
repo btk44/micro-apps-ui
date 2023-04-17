@@ -1,7 +1,7 @@
 export interface TransactionSearchFilters {
     dateFrom?: Date
     dateTo?: Date
-    transactionId?: number
+    id?: number
     ownerId?: number
     amountFrom?: number
     amountTo?: number
@@ -21,7 +21,7 @@ export interface TransactionSearchFilters {
     return {
         dateFrom: new Date(now.getFullYear() - 1000, 0, 1),
         dateTo: new Date(now.getFullYear() + 1000, 11, 1),
-        transactionId: 0,
+        id: 0,
         ownerId: -1,
         amountFrom: -1000000000,
         amountTo: 1000000000,
