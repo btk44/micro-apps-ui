@@ -8,4 +8,5 @@ export interface Transaction {
   groupKey: string
   payee: string
   comment: string  
+  active: boolean
 }

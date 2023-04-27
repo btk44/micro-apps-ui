@@ -7,8 +7,6 @@ export interface AccountSearchFilters {
     id?: number
     active?: boolean
     activeDefined?: boolean
-    take?: number
-    offset?: number
   }
 
   export function GetDefaultAccountSearchFilters(){
@@ -21,8 +19,6 @@ export interface AccountSearchFilters {
         id: 0,
         active: false,
         activeDefined: false,
-        take: 0,
-        offset: 0
     }
   }
   

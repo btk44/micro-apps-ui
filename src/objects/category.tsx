@@ -2,7 +2,9 @@ export interface Category{
     id: number
     name: string
     ownerId: number
-    categoryGroupName: string
+    parentId: number
+    subcategories: Array<Category>
+    active: boolean
 
     color: string
     icon: string

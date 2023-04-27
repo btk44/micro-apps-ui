@@ -2,11 +2,10 @@ export interface CategorySearchFilters {
     ownerId?: number
     name?: string
     id?: number
-    categoryGroupName?: string
+    parentId?: number
     active?: boolean
     activeDefined?: boolean
-    take?: number
-    offset?: number
+    returnTreeStructure?: boolean
   }
 
   export function GetDefaultCategorySearchFilters(){
@@ -14,11 +13,10 @@ export interface CategorySearchFilters {
         ownerId: -1,
         name: '',
         id: 0,
-        categoryGroupName: '',
+        parentId: 0,
         active: false,
         activeDefined: false,
-        take: 0,
-        offset: 0
+        returnTreeStructure: true
     }
   }
   

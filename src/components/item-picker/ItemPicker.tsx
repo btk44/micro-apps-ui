@@ -6,17 +6,16 @@ interface ItemPickerProps{
   onUpdate(updateValue: any): void 
   onCancel(): void
   sourceItemList: any[]
-  parentPropName?: string
   childListPropName?: string
   keyPropName: string
   descriptionPropName: string
 }
 
+// this is simple version for only 1 level of children
 export default function ItemPicker(props: ItemPickerProps) {
 
   const childListPropName = props.childListPropName ?? ''
-  const parentPropName = props.parentPropName ?? ''
-  const nestedItemsMode = props.parentPropName && props.childListPropName && 
+  const nestedItemsMode = props.childListPropName && 
                           props.sourceItemList.some((x: any) => x[childListPropName].length)
 
   const [items, setItems] = useState(props.sourceItemList)
@@ -27,19 +26,16 @@ export default function ItemPicker(props: ItemPickerProps) {
 
   function onItemSelect(item: any){
     if(!hasChildItems(item) )
-      props.onUpdate(item) // and close this picker
+      props.onUpdate(item)
     else
         setItems(item[childListPropName])
   }
   
   function onBack(){
-    const parentItem = nestedItemsMode ? items[0][parentPropName] : null
-    if(parentItem === null || parentItem === undefined)
-      props.onCancel() // and close this picker
+    if(!nestedItemsMode || items === props.sourceItemList)
+      props.onCancel()
     else
-      setItems(parentItem[parentPropName] ? 
-               parentItem[parentPropName][childListPropName] : 
-               props.sourceItemList)
+      setItems(props.sourceItemList)
   }
 
   return (

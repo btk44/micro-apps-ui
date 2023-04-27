@@ -17,14 +17,21 @@ export default function Home(){
     theme: 'red-theme'
   })
 
-  const [transactions, setTransactions] = useState({});
-  const [accounts, setAccounts] = useState({});
-  const [categories, setCategories] = useState({});
+  const [transactions, setTransactions] = useState([])
+  const [accounts, setAccounts] = useState([])
+  const [categories, setCategories] = useState([])
   useEffect(() => {
-    TransactionService.SearchTransactions().then(json => setTransactions(json)).catch(error => console.error(error));
-    TransactionService.SearchAccounts().then(json => setAccounts(json)).catch(error => console.error(error));
-    TransactionService.SearchCategories().then(json => setCategories(json)).catch(error => console.error(error));
+    const transactionCall = TransactionService.SearchTransactions({ownerId:1})
+    const accountsCall = TransactionService.SearchAccounts({ownerId:1})
+    const categoryCall = TransactionService.SearchCategories({ownerId:1})
 
+    Promise.all([transactionCall, accountsCall, categoryCall])
+           .then(([transactionsResponse, accountsResponse, categoriesResponse]) => {
+              setTransactions(transactionsResponse)
+              setAccounts(accountsResponse)
+              setCategories(categoriesResponse)
+           })
+           .catch(error => console.error(error))
   }, []);
 
   const [transaction, setTransaction] = useState({date: new Date(), amount: 0} as Transaction)
@@ -72,10 +79,6 @@ export default function Home(){
     day = day.length < 2 ? `0${day}` : day
     month = month.length < 2 ? `0${month}` : month
 
-    var t = transactions;
-    var a = accounts;
-    var c = categories;
-
     return `${year}/${month}/${day}`
   }
 
@@ -101,14 +104,12 @@ export default function Home(){
         updateValue={onAmountChange}></Calculator> }
       { showModal() &&
         <div className='modal'>
-          {/* { pageLayout.showCategoryPicker &&
+          { pageLayout.showCategoryPicker &&
             <ItemPicker 
               onUpdate={onCategoryChange}
               onCancel={closeModal}
-              sourceItemList={CategoriesStructure}
-              //parentPropName='parentCategory'
-              parentPropName='categoryGroupName'
-              childListPropName='childCategories'
+              sourceItemList={categories}
+              childListPropName='subcategories'
               keyPropName='id'
               descriptionPropName='name'></ItemPicker>
           }
@@ -116,10 +117,10 @@ export default function Home(){
             <ItemPicker 
               onUpdate={onAccountChange}
               onCancel={closeModal}
-              sourceItemList={DummyAccounts}
+              sourceItemList={accounts}
               keyPropName='id'
               descriptionPropName='name'></ItemPicker>
-          } */}
+          } 
         </div>
       }
     </div>
