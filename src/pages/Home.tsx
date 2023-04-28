@@ -17,9 +17,9 @@ export default function Home(){
     theme: 'red-theme'
   })
 
-  const [transactions, setTransactions] = useState([])
-  const [accounts, setAccounts] = useState([])
-  const [categories, setCategories] = useState([])
+  const [transactions, setTransactions] = useState(Array<Transaction>)
+  const [accounts, setAccounts] = useState(Array<Account>)
+  const [categories, setCategories] = useState(Array<Category>)
   useEffect(() => {
     const transactionCall = TransactionService.SearchTransactions({ownerId:1})
     const accountsCall = TransactionService.SearchAccounts({ownerId:1})
@@ -71,6 +71,18 @@ export default function Home(){
     closeModal()
   }
 
+  function getCategoryNameById(id: number){
+    let category = categories.find(x => x.id === id);
+    if (!category)
+      category = categories.map(x => x.subcategories).reduce((a,b) => a.concat(b)).find(x => x.id === id);
+    return category ? category.name : '';
+  }
+
+  function getAccountNameById(id: number){
+    const account = accounts.find(x => x.id === id);
+    return account ? account.name : '';
+  }
+
   function getDateString(): string {
     const year = transaction.date.getFullYear()
     let day = (transaction.date.getDate()).toString()
@@ -95,8 +107,8 @@ export default function Home(){
                 onClick={() => onTypeChange(TransactionType.Expense)}>expense</button>
         <button className={transaction.type !== TransactionType.Income ? 'inactive' : ''}
                 onClick={() => onTypeChange(TransactionType.Income)}>income</button> */}
-        <button onClick={showCategoryPick}>{ transaction.categoryId ? transaction.categoryId : 'category' }</button>
-        <button onClick={showAccountPick}> { transaction.accountId ? transaction.accountId : 'account' }</button>
+        <button onClick={showCategoryPick}>{ transaction.categoryId ? getCategoryNameById(transaction.categoryId) : 'category' }</button>
+        <button onClick={showAccountPick}> { transaction.accountId ? getAccountNameById(transaction.accountId) : 'account' }</button>
       </div>
       <input type='text' placeholder='kto / komu'></input>
       { <Calculator 
