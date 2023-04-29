@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ItemPicker from '../components/item-picker/ItemPicker';
 import './Home.scss'
 import { TransactionType } from '../constants/transaction-type';
-import { Transaction } from '../objects/transaction';
+import { GetEmptyTransaction, Transaction } from '../objects/transaction';
 import { Category } from '../objects/category';
 import { Account } from '../objects/account';
 import TransactionList from '../components/transaction-list/TransactionList';
@@ -20,6 +20,10 @@ export default function Home(){
   const [transactions, setTransactions] = useState(Array<Transaction>)
   const [accounts, setAccounts] = useState(Array<Account>)
   const [categories, setCategories] = useState(Array<Category>)
+
+  const [transaction, setTransaction] = useState(GetEmptyTransaction())
+  const [progress, setProgress] = useState('...')
+
   useEffect(() => {
     const transactionCall = TransactionService.SearchTransactions({ownerId:1})
     const accountsCall = TransactionService.SearchAccounts({ownerId:1})
@@ -33,8 +37,6 @@ export default function Home(){
            })
            .catch(error => console.error(error))
   }, []);
-
-  const [transaction, setTransaction] = useState({date: new Date(), amount: 0} as Transaction)
 
   function showModal(): boolean {
     return pageLayout.showAccountPicker || pageLayout.showCategoryPicker
@@ -74,7 +76,7 @@ export default function Home(){
   function getCategoryNameById(id: number){
     let category = categories.find(x => x.id === id);
     if (!category)
-      category = categories.map(x => x.subcategories).reduce((a,b) => a.concat(b)).find(x => x.id === id);
+      category = categories.flatMap(x => x.subcategories).find(x => x.id === id);
     return category ? category.name : '';
   }
 
@@ -92,6 +94,13 @@ export default function Home(){
     month = month.length < 2 ? `0${month}` : month
 
     return `${year}/${month}/${day}`
+  }
+
+  function saveTransaction(): void {
+    setProgress('saving...')
+    TransactionService.SaveTransactions([transaction]).then(
+      () => setProgress('done!')
+    )
   }
 
   return (
@@ -135,6 +144,8 @@ export default function Home(){
           } 
         </div>
       }
+      <button onClick={saveTransaction}> save </button>
+      <input type='text' placeholder={progress} readOnly></input>
     </div>
   );
 }

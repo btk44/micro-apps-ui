@@ -15,7 +15,7 @@ export interface TransactionSearchFilters {
     offset?: number
   }
 
-  export function GetDefaultTransactionSearchFilters(){
+  export function GetDefaultTransactionSearchFilters(): TransactionSearchFilters{
     const now = new Date()
 
     return {

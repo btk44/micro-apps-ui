@@ -9,7 +9,7 @@ export interface AccountSearchFilters {
     activeDefined?: boolean
   }
 
-  export function GetDefaultAccountSearchFilters(){
+  export function GetDefaultAccountSearchFilters(): AccountSearchFilters{
     return {
         ownerId: -1,
         currencies: [],

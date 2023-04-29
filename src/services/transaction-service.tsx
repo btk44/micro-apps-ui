@@ -15,7 +15,8 @@ export const TransactionService = {
 
     SaveTransactions: async function(transactions: Array<Transaction>) {    
         try{
-            const response = await fetch(`${this.apiUrl}/${this.transactionUrl}`, { method: 'POST', body: JSON.stringify(transactions) })
+            const processInput = { transactions: transactions }
+            const response = await fetch(`${this.apiUrl}/${this.transactionUrl}/process`, { method: 'POST', body: JSON.stringify(processInput) })
             return await response.json()
         } catch(error) {
             return []
