@@ -1,7 +1,8 @@
 import React from 'react';
 import './App.scss';
-import Home from './pages/Home';
+import Home from './pages/home/Home';
 import { AuthInterceptor } from './services/interceptor';
+import TransactionEdit from './pages/transaction-edit/TransactionEdit';
 
 function App() {
   AuthInterceptor();
@@ -9,7 +10,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header"></header>
-      <Home></Home>
+      {/* <Home></Home> */}
+      <TransactionEdit></TransactionEdit>
       <footer></footer>
     </div>
   );

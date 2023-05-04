@@ -8,6 +8,7 @@ export interface Transaction {
   groupKey: string | null
   payee: string
   comment: string  
+  groupTransactions: Array<Transaction> | null
   active: boolean
 }
 
@@ -22,6 +23,7 @@ export function GetEmptyTransaction() : Transaction {
       groupKey: null,
       payee: '',
       comment: '',  
+      groupTransactions: null,
       active: true
   }
 }

@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
-import Calculator from '../components/calculator/Calculator';
+import Calculator from '../../components/calculator/Calculator';
 import { useState } from 'react';
-import ItemPicker from '../components/item-picker/ItemPicker';
-import './Home.scss'
-import { TransactionType } from '../constants/transaction-type';
-import { GetEmptyTransaction, Transaction } from '../objects/transaction';
-import { Category } from '../objects/category';
-import { Account } from '../objects/account';
-import TransactionList from '../components/transaction-list/TransactionList';
-import { TransactionService } from '../services/transaction-service';
+import ItemPicker from '../../components/item-picker/ItemPicker';
+import './TransactionEdit.scss'
+import { TransactionType } from '../../constants/transaction-type';
+import { GetEmptyTransaction, Transaction } from '../../objects/transaction';
+import { Category } from '../../objects/category';
+import { Account } from '../../objects/account';
+import TransactionList from '../../components/transaction-list/TransactionList';
+import { TransactionService } from '../../services/transaction-service';
 
-export default function Home(){
+export default function TransactionEdit(){
   const [pageLayout, setPageLayout] = useState({
     showCategoryPicker: false,
     showAccountPicker: false,
