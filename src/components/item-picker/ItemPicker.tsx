@@ -1,6 +1,7 @@
 import React from 'react'
 import './ItemPicker.scss'
 import { useState } from 'react'
+import icon from '../../assets/icon.svg'
 
 interface ItemPickerProps{
   onUpdate(updateValue: any): void 
@@ -43,11 +44,11 @@ export default function ItemPicker(props: ItemPickerProps) {
       <ul>
         { items.map((item: any) => 
             <li
-                key={item[props.keyPropName]} onClick={() => onItemSelect(item)}>
-              <img src={require('./icons/icon.svg').default} alt='' style={{borderColor: item.color}}/>
-              <span>{ item[props.descriptionPropName] }</span>
-              {hasChildItems(item) && <span className='children-indicator'>&#8250;</span> }
-            </li> 
+          key={item[props.keyPropName]} onClick={() => onItemSelect(item)}>
+          <img src={icon} alt='' style={{ borderColor: item.color }} />
+          <span>{item[props.descriptionPropName]}</span>
+          {hasChildItems(item) && <span className='children-indicator'>&#8250;</span>}
+        </li> 
           )
         }
       </ul>

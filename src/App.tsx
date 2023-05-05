@@ -1,8 +1,6 @@
-import React from 'react';
-import './App.scss';
-import Home from './pages/home/Home';
-import { AuthInterceptor } from './services/interceptor';
+import './App.scss'
 import TransactionEdit from './pages/transaction-edit/TransactionEdit';
+import { AuthInterceptor } from './services/interceptor';
 
 function App() {
   AuthInterceptor();
