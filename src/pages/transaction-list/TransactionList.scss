@@ -2,7 +2,7 @@
 
 $item-size: $form-control-default-h*1.3;
 
-.item-picker-component{ 
+.transaction-list-component{ 
     padding-bottom: $item-size;
     background-color: $primary-color-light;
 
@@ -23,13 +23,6 @@ $item-size: $form-control-default-h*1.3;
                 background-color: $primary-color-dark;
             }
 
-            img {
-                grid-column: 1;
-                height: calc($item-size*0.7);
-                align-self: center;
-                justify-self: center;
-            }
-
             span {
                 grid-column: 2;
                 text-align: left;
@@ -37,18 +30,6 @@ $item-size: $form-control-default-h*1.3;
                 line-height: $item-size;
                 padding-left: calc($item-size/6);
             }
-
-            .children-indicator {
-                grid-column: 3;
-                font-size: large;
-                font-weight: 500;
-            }
         }
-    }
-
-    button {
-        position: fixed;
-        bottom: 0;
-        left: 0;
     }
 }

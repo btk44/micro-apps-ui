@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
-import Calculator from '../../components/calculator/Calculator';
-import { useState } from 'react';
-import ItemPicker from '../../components/item-picker/ItemPicker';
 import './TransactionEdit.scss'
+
+import { useEffect, useState } from 'react';
+import Calculator from '../../components/calculator/Calculator';
+import ItemPicker from '../../components/item-picker/ItemPicker';
 import { TransactionType } from '../../constants/transaction-type';
 import { GetEmptyTransaction, Transaction } from '../../objects/transaction';
 import { Category } from '../../objects/category';
 import { Account } from '../../objects/account';
-import TransactionList from '../../components/transaction-list/TransactionList';
 import { TransactionService } from '../../services/transaction-service';
 
 export default function TransactionEdit(){
@@ -105,10 +104,6 @@ export default function TransactionEdit(){
 
   return (
     <div className={'home ' + pageLayout.theme}>
-      <div>
-        <TransactionList transactions={ [] }></TransactionList>
-      </div>
-
       <div className='buttons'>
         <button>{ 'Ania' }</button>
         <button> { getDateString() }</button>
