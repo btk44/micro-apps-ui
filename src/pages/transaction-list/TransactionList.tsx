@@ -5,7 +5,7 @@ import { Category } from '../../objects/category';
 import { Account } from '../../objects/account';
 import { TransactionService } from '../../services/transaction-service';
 import { Transaction } from '../../objects/transaction';
-import { redirect } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 
 export default function TransactionList(){
   const [transactions, setTransactions] = useState(Array<Transaction>)
@@ -26,16 +26,12 @@ export default function TransactionList(){
            .catch(error => console.error(error))
   }, []);
 
-  function goToEdit(): any{
-    return redirect('/edit');
-  }
-
   return (
     <div className='transaction-list-component'>
       <ul>
         { transactions.map((transaction: Transaction) => 
-            <li key={transaction.id} onClick={goToEdit}>
-              <span>{transaction.amount}</span>
+            <li key={transaction.id}>
+              <Link to="/edit"><span>{transaction.amount}</span></Link>
             </li> 
           )
         }
