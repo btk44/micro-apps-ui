@@ -11,6 +11,7 @@ export interface TransactionSearchFilters {
     active?: boolean
     activeDefined?: boolean
     accounts?: Array<number>
+    includeGroupTransactions?: boolean
     take?: number
     offset?: number
   }
@@ -31,6 +32,7 @@ export interface TransactionSearchFilters {
         active: false,
         activeDefined: false,
         accounts: [],
+        includeGroupTransactions: true,
         take: 0,
         offset: 0
     }

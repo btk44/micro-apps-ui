@@ -5,7 +5,7 @@ import { Category } from '../../objects/category';
 import { Account } from '../../objects/account';
 import { TransactionService } from '../../services/transaction-service';
 import { Transaction } from '../../objects/transaction';
-import { Link, redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function TransactionList(){
   const [transactions, setTransactions] = useState(Array<Transaction>)
@@ -40,7 +40,7 @@ export default function TransactionList(){
   function getMainInfoText(transaction: Transaction): string {
     if(transaction.groupTransactions?.length){
       const balanceTransacion = transaction.groupTransactions[0]
-      return `${accounts[balanceTransacion.accountId].name} \\2192 ${accounts[transaction.accountId].name}`
+      return accounts[balanceTransacion.accountId].name
     }
 
     return transaction.payee ? transaction.payee : '--'
@@ -50,33 +50,31 @@ export default function TransactionList(){
     return transaction.amount > 0 ? '+' : transaction.amount < 0 ? '-' : '';
   }
 
+  function getAmountColor(transaction: Transaction): string {
+    return transaction.amount > 0 ? 'green' : transaction.amount < 0 ? 'red' : 'yellow';
+  }
+
   return (
     <div className='transaction-list-component'>
       <ul>
         { transactions.map((transaction: Transaction) => 
-            <li key={transaction.id}>
+            <li key={transaction.id} style={{borderLeftColor: categories[transaction.categoryId].color}}>
               <Link to='/edit'>
-                <div className='related-details'>
-                  <span className='small-font'>
-                    <img className='icon' style={{backgroundColor: categories[transaction.categoryId].color}}/>
-                    {categories[transaction.categoryId].name}
-                  </span>
-                  <span className='small-font'>
-                    <img className='icon' style={{backgroundColor: accounts[transaction.accountId].color}}/>
-                    {accounts[transaction.accountId].name}
-                  </span>
+                <div>
+                  <span>{categories[transaction.categoryId].name}</span>
+                  <span>{accounts[transaction.accountId].name}</span>
                 </div>
                 <div className='main-details'>
-                  <span>{ getMainInfoText(transaction) }</span>
+                  <span className='main-text'>{ getMainInfoText(transaction) }</span>
                   <span>
-                    <span>{getTransactionSign(transaction)}</span>
-                    <span>{ Math.abs(transaction.amount) }</span>
-                    <span className='small-font'>PLN</span>
+                    <span className={`main-text ${getAmountColor(transaction)}-text`}>{getTransactionSign(transaction)}</span>
+                    <span className={`main-text ${getAmountColor(transaction)}-text`}>{ Math.abs(transaction.amount) }</span>
+                    <span>PLN</span>
                   </span>
                 </div>
                 { transaction.comment && 
                   <div>
-                    <span className='small-font'>{transaction.comment ? transaction.comment : ''}</span>
+                    <span>{transaction.comment ? transaction.comment : ''}</span>
                   </div>
                 }
               </Link>
