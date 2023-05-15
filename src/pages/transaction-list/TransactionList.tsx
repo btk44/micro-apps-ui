@@ -1,40 +1,23 @@
 import './TransactionList.scss'
 
-import { useEffect, useState } from 'react';
-import { Category } from '../../objects/category';
-import { Account } from '../../objects/account';
-import { TransactionService } from '../../services/transaction-service';
+import { useEffect } from 'react';
 import { Transaction } from '../../objects/transaction';
 import { Link } from 'react-router-dom';
+import { initialLoad, selectAccounts, selectCategories, selectTransactions } from '../../store/TransactionSlice';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { selectOwnerId } from '../../store/UserSlice';
+
 
 export default function TransactionList(){
-  const [transactions, setTransactions] = useState(Array<Transaction>)
-  const [accounts, setAccounts] = useState(Array<Account>)
-  const [categories, setCategories] = useState(Array<Category>)
+  const ownerId = useAppSelector(selectOwnerId)
+
+  const accounts = useAppSelector(selectAccounts)
+  const categories = useAppSelector(selectCategories)
+  const transactions = useAppSelector(selectTransactions)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const transactionCall = TransactionService.SearchTransactions({ownerId:1, take: 10000})
-    const accountsCall = TransactionService.SearchAccounts({ownerId:1})
-    const categoryCall = TransactionService.SearchCategories({ownerId:1})
-
-    Promise.all([transactionCall, accountsCall, categoryCall])
-           .then(([transactionsResponse, accountsResponse, categoriesResponse]) => {
-              setTransactions(transactionsResponse)
-
-              const accountsDict: any = {}
-              accountsResponse.forEach((x: Account) => {
-                accountsDict[x.id] = x
-              });
-              setAccounts(accountsDict)
-
-              const categoriesDict: any = {}
-              const flattenCategories = categoriesResponse.concat(categoriesResponse.flatMap((x: Category) => x.subcategories))
-              flattenCategories.forEach((x: Category) => {
-                categoriesDict[x.id] = x
-              });
-              setCategories(categoriesDict)
-           })
-           .catch(error => console.error(error))
+    dispatch(initialLoad({ownerId: ownerId, transactionCount: 10000}))
   }, []);
 
   function getMainInfoText(transaction: Transaction): string {
