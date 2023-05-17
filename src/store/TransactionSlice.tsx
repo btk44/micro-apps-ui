@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { TransactionService } from '../services/transaction-service'
-import { Account } from '../objects/account'
-import { Category } from '../objects/category'
-import { Currency } from '../objects/currency'
-import { Transaction } from '../objects/transaction'
+import { TransactionService } from '../services/TransactionService'
+import { Account } from '../objects/Account'
+import { Category } from '../objects/Category'
+import { Currency } from '../objects/Currency'
+import { Transaction } from '../objects/Transaction'
 import { RootState } from './Store'
 
 // separate this store in the future if needed
@@ -33,14 +33,16 @@ export const initialLoad = createAsyncThunk('transaction/initialLoad', async (pa
       const transactionCall = TransactionService.SearchTransactions({ownerId: parameters.ownerId, take: parameters.transactionCount})
       const accountsCall = TransactionService.SearchAccounts({ownerId: parameters.ownerId})
       const categoryCall = TransactionService.SearchCategories({ownerId: parameters.ownerId})
+      const currencyCall = TransactionService.SearchCurrencies()
 
       return Promise
-        .all([transactionCall, accountsCall, categoryCall])
-        .then(([transactionsResponse, accountsResponse, categoriesResponse]) => {
+        .all([transactionCall, accountsCall, categoryCall, currencyCall])
+        .then(([transactionsResponse, accountsResponse, categoriesResponse, currencyResponse]) => {
           const accountsDict: any = Object.assign({}, ...accountsResponse.map((x: Account) => ({[x.id]: x})));
           const flattenCategories = categoriesResponse.concat(categoriesResponse.flatMap((x: Category) => x.subcategories))
           const categoriesDict: any = Object.assign({}, ...flattenCategories.map((x: Category) => ({[x.id]: x})));
-          return { accounts: accountsDict, categories: categoriesDict, transactions: transactionsResponse, currencies: [] }
+          const currenciesDict: any = Object.assign({}, ...currencyResponse.map((x: Currency) => ({[x.id]: x})));
+          return { accounts: accountsDict, categories: categoriesDict, transactions: transactionsResponse, currencies: currenciesDict }
         })
 })
 
@@ -56,6 +58,7 @@ export const transactionSlice = createSlice({
       state.accounts = action.payload.accounts
       state.categories = action.payload.categories
       state.transactions = action.payload.transactions
+      state.currencies = action.payload.currencies
     })
   }
 })

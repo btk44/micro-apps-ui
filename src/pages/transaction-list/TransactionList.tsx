@@ -1,7 +1,7 @@
 import './TransactionList.scss'
 
 import { useEffect } from 'react';
-import { Transaction } from '../../objects/transaction';
+import { Transaction } from '../../objects/Transaction';
 import { Link } from 'react-router-dom';
 import { initialLoad, selectAccounts, selectCategories, selectTransactions } from '../../store/TransactionSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks';

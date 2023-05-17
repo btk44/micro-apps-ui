@@ -1,7 +1,7 @@
 import { Provider } from 'react-redux'
 import './App.scss'
 import Router from './Router'
-import { AuthInterceptor } from './services/interceptor'
+import { AuthInterceptor } from './services/Interceptor'
 import store from './store/Store'
 
 function App() {

@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import Calculator from '../../components/calculator/Calculator';
 import ItemPicker from '../../components/item-picker/ItemPicker';
 import { TransactionType } from '../../constants/transaction-type';
-import { GetEmptyTransaction, Transaction } from '../../objects/transaction';
-import { Category } from '../../objects/category';
-import { Account } from '../../objects/account';
-import { TransactionService } from '../../services/transaction-service';
+import { GetEmptyTransaction, Transaction } from '../../objects/Transaction';
+import { Category } from '../../objects/Category';
+import { Account } from '../../objects/Account';
+import { TransactionService } from '../../services/TransactionService';
 
 export default function TransactionEdit(){
   const [pageLayout, setPageLayout] = useState({
