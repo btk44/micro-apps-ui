@@ -5,7 +5,7 @@ import { GetDefaultTransactionSearchFilters, TransactionSearchFilters } from "..
 import { CurrencySearchFilters, GetDefaultCurrencySearchFilters } from "../objects/CurrencySearchFilters"
 
 export const TransactionService = {
-    apiUrl: 'https://localhost:5001/api',
+    apiUrl: 'http://localhost:5000/api',
     transactionUrl: 'Transaction',
     accountUrl: 'Account',
     categoryUrl: 'Category',

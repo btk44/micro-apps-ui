@@ -18,7 +18,8 @@ interface TransactionsState {
 
 interface TransactionLoadParams {
   ownerId: number, 
-  transactionCount: number
+  transactionCount: number,
+  transactionSkip: number
 }
 
 const initialState: TransactionsState = {
@@ -29,8 +30,9 @@ const initialState: TransactionsState = {
   transactions: []
 }
 
-export const initialLoad = createAsyncThunk('transaction/initialLoad', async (parameters: TransactionLoadParams) => {
-      const transactionCall = TransactionService.SearchTransactions({ownerId: parameters.ownerId, take: parameters.transactionCount})
+export const initTransactionStore = createAsyncThunk('transaction/initTransactionStore', async (parameters: TransactionLoadParams) => {
+      const transactionCall = TransactionService.SearchTransactions({ownerId: parameters.ownerId, 
+        take: parameters.transactionCount, offset: parameters.transactionSkip })
       const accountsCall = TransactionService.SearchAccounts({ownerId: parameters.ownerId})
       const categoryCall = TransactionService.SearchCategories({ownerId: parameters.ownerId})
       const currencyCall = TransactionService.SearchCurrencies()
@@ -46,19 +48,31 @@ export const initialLoad = createAsyncThunk('transaction/initialLoad', async (pa
         })
 })
 
+export const loadTransactions = createAsyncThunk('transaction/loadTransactions', async (parameters: TransactionLoadParams) => {
+  const transactionCall = TransactionService.SearchTransactions({ownerId: parameters.ownerId, 
+    take: parameters.transactionCount, offset: parameters.transactionSkip })
+
+  return transactionCall.then((transactionsResponse) => { return transactionsResponse })
+})
+
 export const transactionSlice = createSlice({
   name: 'transaction',
   initialState,
   reducers: { },
   extraReducers: (builder) => {
-    builder.addCase(initialLoad.pending, (state: TransactionsState) => { state.loading = true })
-    builder.addCase(initialLoad.rejected, (state: TransactionsState) => { state.loading = false })
-    builder.addCase(initialLoad.fulfilled, (state: TransactionsState, action) => {  
+    builder.addCase(initTransactionStore.pending, (state: TransactionsState) => { state.loading = true })
+    builder.addCase(initTransactionStore.rejected, (state: TransactionsState) => { state.loading = false })
+    builder.addCase(initTransactionStore.fulfilled, (state: TransactionsState, action) => {  
       state.loading = false
       state.accounts = action.payload.accounts
       state.categories = action.payload.categories
       state.transactions = action.payload.transactions
       state.currencies = action.payload.currencies
+    })
+    builder.addCase(loadTransactions.pending, (state: TransactionsState) => { state.loading = true })
+    builder.addCase(loadTransactions.rejected, (state: TransactionsState) => { state.loading = false })
+    builder.addCase(loadTransactions.fulfilled, (state: TransactionsState, action) => { 
+      state.transactions = state.transactions.concat(action.payload) 
     })
   }
 })

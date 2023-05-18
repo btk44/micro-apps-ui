@@ -1,14 +1,17 @@
 import './TransactionList.scss'
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Transaction } from '../../objects/Transaction';
 import { Link } from 'react-router-dom';
-import { initialLoad, selectAccounts, selectCategories, selectTransactions } from '../../store/TransactionSlice';
+import { initTransactionStore, loadTransactions, selectAccounts, selectCategories, selectTransactions } from '../../store/TransactionSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { selectOwnerId } from '../../store/UserSlice';
 
 
 export default function TransactionList(){
+  const transactionPageSize = 20
+  const [transactionsPage, setTransactionsPage] = useState(0)
+
   const ownerId = useAppSelector(selectOwnerId)
 
   const accounts = useAppSelector(selectAccounts)
@@ -17,7 +20,9 @@ export default function TransactionList(){
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(initialLoad({ownerId: ownerId, transactionCount: 10000}))
+    dispatch(initTransactionStore({ownerId: ownerId, 
+      transactionCount: transactionPageSize, transactionSkip: transactionsPage * transactionPageSize}))
+    setTransactionsPage(transactionsPage + 1)
   }, []);
 
   function getMainInfoText(transaction: Transaction): string {
@@ -37,8 +42,15 @@ export default function TransactionList(){
     return transaction.amount > 0 ? 'green' : transaction.amount < 0 ? 'red' : 'yellow';
   }
 
+  function loadMoreTransactions(): void {
+    dispatch(loadTransactions({ownerId: ownerId, transactionCount: transactionPageSize, 
+      transactionSkip: transactionsPage * transactionPageSize }))
+    setTransactionsPage(transactionsPage + 1)
+  }
+
   return (
     <div className='transaction-list-component'>
+      <button onClick={loadMoreTransactions}>test</button>
       <ul>
         { transactions.map((transaction: Transaction) => 
             <li key={transaction.id} style={{borderLeftColor: categories[transaction.categoryId].color}}>
