@@ -6,10 +6,11 @@ import { Link } from 'react-router-dom';
 import { initTransactionStore, loadTransactions, selectAccounts, selectCategories, selectTransactions } from '../../store/TransactionSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { selectOwnerId } from '../../store/UserSlice';
+import { GetDefaultTransactionSearchFilters } from '../../objects/TransactionSearchFilters';
 
 
 export default function TransactionList(){
-  const transactionPageSize = 20
+  const transactionPageSize = 2
   const [transactionsPage, setTransactionsPage] = useState(0)
 
   const ownerId = useAppSelector(selectOwnerId)
@@ -21,7 +22,7 @@ export default function TransactionList(){
 
   useEffect(() => {
     dispatch(initTransactionStore({ownerId: ownerId, 
-      transactionCount: transactionPageSize, transactionSkip: transactionsPage * transactionPageSize}))
+      take: transactionPageSize, offset: transactionsPage * transactionPageSize}))
     setTransactionsPage(transactionsPage + 1)
   }, []);
 
@@ -43,8 +44,8 @@ export default function TransactionList(){
   }
 
   function loadMoreTransactions(): void {
-    dispatch(loadTransactions({ownerId: ownerId, transactionCount: transactionPageSize, 
-      transactionSkip: transactionsPage * transactionPageSize }))
+    dispatch(loadTransactions({ownerId: ownerId, take: transactionPageSize, 
+      offset: transactionsPage * transactionPageSize }))
     setTransactionsPage(transactionsPage + 1)
   }
 

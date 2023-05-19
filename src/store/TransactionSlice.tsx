@@ -5,6 +5,7 @@ import { Category } from '../objects/Category'
 import { Currency } from '../objects/Currency'
 import { Transaction } from '../objects/Transaction'
 import { RootState } from './Store'
+import { TransactionSearchFilters } from '../objects/TransactionSearchFilters'
 
 // separate this store in the future if needed
 
@@ -16,12 +17,6 @@ interface TransactionsState {
   transactions: Array<Transaction>
 }
 
-interface TransactionLoadParams {
-  ownerId: number, 
-  transactionCount: number,
-  transactionSkip: number
-}
-
 const initialState: TransactionsState = {
   loading: false,
   accounts: [],
@@ -30,9 +25,8 @@ const initialState: TransactionsState = {
   transactions: []
 }
 
-export const initTransactionStore = createAsyncThunk('transaction/initTransactionStore', async (parameters: TransactionLoadParams) => {
-      const transactionCall = TransactionService.SearchTransactions({ownerId: parameters.ownerId, 
-        take: parameters.transactionCount, offset: parameters.transactionSkip })
+export const initTransactionStore = createAsyncThunk('transaction/initTransactionStore', async (parameters: TransactionSearchFilters) => {
+      const transactionCall = TransactionService.SearchTransactions(parameters)
       const accountsCall = TransactionService.SearchAccounts({ownerId: parameters.ownerId})
       const categoryCall = TransactionService.SearchCategories({ownerId: parameters.ownerId})
       const currencyCall = TransactionService.SearchCurrencies()
@@ -48,9 +42,8 @@ export const initTransactionStore = createAsyncThunk('transaction/initTransactio
         })
 })
 
-export const loadTransactions = createAsyncThunk('transaction/loadTransactions', async (parameters: TransactionLoadParams) => {
-  const transactionCall = TransactionService.SearchTransactions({ownerId: parameters.ownerId, 
-    take: parameters.transactionCount, offset: parameters.transactionSkip })
+export const loadTransactions = createAsyncThunk('transaction/loadTransactions', async (parameters: TransactionSearchFilters) => {
+  const transactionCall = TransactionService.SearchTransactions(parameters)
 
   return transactionCall.then((transactionsResponse) => { return transactionsResponse })
 })
@@ -58,7 +51,9 @@ export const loadTransactions = createAsyncThunk('transaction/loadTransactions',
 export const transactionSlice = createSlice({
   name: 'transaction',
   initialState,
-  reducers: { },
+  reducers: {
+    clearTransactions: (state) => { state.transactions = [] }
+  },
   extraReducers: (builder) => {
     builder.addCase(initTransactionStore.pending, (state: TransactionsState) => { state.loading = true })
     builder.addCase(initTransactionStore.rejected, (state: TransactionsState) => { state.loading = false })
