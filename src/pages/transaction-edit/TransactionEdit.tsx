@@ -103,7 +103,7 @@ export default function TransactionEdit(){
   }
 
   return (
-    <div className={'home ' + pageLayout.theme}>
+    <div className={'transaction-edit-component component'}>
       <div className='buttons'>
         <button>{ 'Ania' }</button>
         <button> { getDateString() }</button>

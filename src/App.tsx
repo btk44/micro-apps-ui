@@ -9,8 +9,8 @@ function App() {
 
   return (
     <Provider store={store}>
-      <div className="App">
-        <header className="App-header"></header>
+      <div className="app light-theme">
+        <header className="app-header"></header>
         <Router/>
         <footer></footer>
       </div>

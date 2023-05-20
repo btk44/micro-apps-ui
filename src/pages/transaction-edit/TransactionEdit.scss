@@ -6,20 +6,22 @@
     left: 0;
     height: 100vh;
     width: 100%;
-    box-sizing: border-box;
     background-color: $primary-color-light;
 }
 
-.buttons {
-    border-bottom: 2px solid $primary-color;
+.transaction-edit-component {
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1px;
 
-    button {
-        width: 50%;
-        border-bottom: 2px solid $primary-color-light;
+        button {
+            width: 49%;
+        }
     }
 
-    .inactive{
-        background-color: $primary-color-light;
-    }
+    .inactive {
 
+    }
 }

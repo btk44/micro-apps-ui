@@ -50,8 +50,7 @@ export default function TransactionList(){
   }
 
   return (
-    <div className='transaction-list-component'>
-      <button onClick={loadMoreTransactions}>test</button>
+    <div className='transaction-list-component component'>
       <ul>
         { transactions.map((transaction: Transaction) => 
             <li key={transaction.id} style={{borderLeftColor: categories[transaction.categoryId].color}}>
@@ -78,6 +77,7 @@ export default function TransactionList(){
           )
         }
       </ul>
+      <button onClick={loadMoreTransactions}>load more</button>
     </div>
   );
 }
