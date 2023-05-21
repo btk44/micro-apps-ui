@@ -4,10 +4,8 @@
     ul {
         li {
             cursor: pointer;
+            border-left: 5px solid transparent;
 
-            &:active {
-                background-color: $background-color-selected;
-            }
 
             a {
                 text-align: left;

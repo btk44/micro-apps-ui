@@ -12,12 +12,11 @@
 .transaction-edit-component {
     .buttons {
         display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
+        justify-content: space-between; 
         gap: 1px;
-
         button {
-            width: 49%;
+            width: 0;
+            flex: 1 1 0px;
         }
     }
 

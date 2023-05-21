@@ -107,6 +107,8 @@ export default function TransactionEdit(){
       <div className='buttons'>
         <button>{ 'Ania' }</button>
         <button> { getDateString() }</button>
+      </div>
+      <div className='buttons'>
         {/* <button className={transaction.type !== TransactionType.Expense ? 'inactive' : ''}
                 onClick={() => onTypeChange(TransactionType.Expense)}>expense</button>
         <button className={transaction.type !== TransactionType.Income ? 'inactive' : ''}
