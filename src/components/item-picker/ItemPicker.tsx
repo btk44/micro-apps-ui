@@ -1,4 +1,3 @@
-import React from 'react'
 import './ItemPicker.scss'
 import { useState } from 'react'
 import icon from '../../assets/icon.svg'

@@ -6,11 +6,13 @@ import { Currency } from '../objects/Currency'
 import { Transaction } from '../objects/Transaction'
 import { RootState } from './Store'
 import { TransactionSearchFilters } from '../objects/TransactionSearchFilters'
+import { GetEmptyTransaction } from '../objects/Transaction'
 
 // separate this store in the future if needed
 
 interface TransactionsState {
   loading: boolean,
+  currentTransaction: Transaction,
   accounts: Array<Account>,
   categories: Array<Category>,
   currencies: Array<Currency>,
@@ -19,6 +21,7 @@ interface TransactionsState {
 
 const initialState: TransactionsState = {
   loading: false,
+  currentTransaction: GetEmptyTransaction(),
   accounts: [],
   categories: [],
   currencies: [],
@@ -52,7 +55,8 @@ export const transactionSlice = createSlice({
   name: 'transaction',
   initialState,
   reducers: {
-    clearTransactions: (state) => { state.transactions = [] }
+    clearTransactions: (state) => { state.transactions = [] },
+    setCurrentTransaction: (state, action) => { state.currentTransaction = action.payload }
   },
   extraReducers: (builder) => {
     builder.addCase(initTransactionStore.pending, (state: TransactionsState) => { state.loading = true })
@@ -76,4 +80,8 @@ export const selectAccounts = (state: RootState) => state.transactionStore.accou
 export const selectCategories = (state: RootState) => state.transactionStore.categories
 export const selectCurrencies = (state: RootState) => state.transactionStore.currencies
 export const selectTransactions = (state: RootState) => state.transactionStore.transactions
+export const selectCurrentTransaction = (state: RootState) => state.transactionStore.currentTransaction
+
+export const { clearTransactions, setCurrentTransaction } = transactionSlice.actions
+
 export default transactionSlice.reducer

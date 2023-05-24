@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { initTransactionStore, loadTransactions, selectAccounts, selectCategories, selectTransactions } from '../../store/TransactionSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { selectOwnerId } from '../../store/UserSlice';
-import { GetDefaultTransactionSearchFilters } from '../../objects/TransactionSearchFilters';
 
 
 export default function TransactionList(){
