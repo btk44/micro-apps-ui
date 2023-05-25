@@ -52,7 +52,7 @@ export default function TransactionList(){
     <div className='transaction-list-component component'>
       <ul>
         { transactions.map((transaction: Transaction) => 
-            <li key={transaction.id} style={{borderLeftColor: categories[transaction.categoryId].color}}>
+            <li key={transaction.id} /*style={{borderLeftColor: categories[transaction.categoryId].color}}*/ >
               <Link to='/edit'>
                 <div>
                   <span>{categories[transaction.categoryId].name}</span>
