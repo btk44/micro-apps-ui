@@ -60,10 +60,10 @@ export default function TransactionEdit(){
         <button> { getDateString() }</button>
       </div>
       <div className='buttons'>
-        <button onClick={() => navigate(`/category-picker/${transaction.categoryId}`)}>
+        <button onClick={() => navigate(`/category-picker/0`)}>
           { transaction.categoryId ? getCategoryNameById(transaction.categoryId) : 'kategoria' }
         </button>
-        <button onClick={() => () => navigate(`/account-picker/${transaction.categoryId}`)}> 
+        <button onClick={() => () => navigate(`/account-picker`)}> 
           { transaction.accountId ? getAccountNameById(transaction.accountId) : 'konto' }
         </button>
       </div>

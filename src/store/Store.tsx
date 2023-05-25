@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './UserSlice'
-import transactionReducer from './TransactionSlice'
+import transactionReducer, { fixComplexTypes } from './TransactionSlice'
 
 const saveStoreToLocalStorage = (store: any) => {
   return (next: any) => (action: any) => {
@@ -13,17 +13,31 @@ const saveStoreToLocalStorage = (store: any) => {
 const preloadStoreFromLocalStorage = () => {
   const storeStateString = localStorage.getItem('appState')
   if (storeStateString !== null) {
-    return JSON.parse(storeStateString); 
+    const state = JSON.parse(storeStateString)    
+    fixComplexTypes(state.transactionStore)
+    return state;
   }
 };
+
+// const dateTransform = createTransform(null, (outboundState) => {
+//   return traverse(outboundState).map((val) => {
+//       if (Time.isISOStringDate(val)) {
+//           return new Date(val);
+//       }
+
+//       return val;
+//   });
+// });
 
 const store = configureStore({
   reducer: {
     userStore: userReducer,
-    transactionStore: transactionReducer  
+    transactionStore: transactionReducer
   },
   preloadedState: preloadStoreFromLocalStorage(),
-  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(saveStoreToLocalStorage)
+  middleware: getDefaultMiddleware => getDefaultMiddleware({
+    serializableCheck: false
+  }).concat(saveStoreToLocalStorage)
 })
 
 export default store

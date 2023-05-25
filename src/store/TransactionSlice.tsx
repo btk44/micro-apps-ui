@@ -76,6 +76,18 @@ export const transactionSlice = createSlice({
   }
 })
 
+export function fixComplexTypes(state: TransactionsState){
+  state.currentTransaction.date = new Date(state.currentTransaction.date)
+  state.transactions.forEach(transaction => {
+    transaction.date = new Date(transaction.date)
+    if(transaction.groupTransactions?.length){
+      transaction.groupTransactions.forEach(gTransaction => {
+        gTransaction.date = new Date(gTransaction.date)
+      })
+    }
+  })
+}
+
 export const selectAccounts = (state: RootState) => state.transactionStore.accounts
 export const selectCategories = (state: RootState) => state.transactionStore.categories
 export const selectCurrencies = (state: RootState) => state.transactionStore.currencies
