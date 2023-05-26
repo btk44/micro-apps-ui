@@ -2,10 +2,9 @@ import './TransactionEdit.scss'
 
 import { useEffect, useState } from 'react'
 import Calculator from '../../components/calculator/Calculator'
-import { GetEmptyTransaction, Transaction } from '../../objects/Transaction'
 import { TransactionService } from '../../services/TransactionService'
 import { useAppDispatch, useAppSelector } from '../../hooks'
-import { selectAccounts, selectCategories, selectCurrentTransaction, selectTransactions } from '../../store/TransactionSlice'
+import { selectAccounts, selectCategories, selectCurrentTransaction } from '../../store/TransactionSlice'
 import { useNavigate } from 'react-router-dom'
 
 export default function TransactionEdit(){
@@ -63,7 +62,7 @@ export default function TransactionEdit(){
         <button onClick={() => navigate(`/category-picker/0`)}>
           { transaction.categoryId ? getCategoryNameById(transaction.categoryId) : 'kategoria' }
         </button>
-        <button onClick={() => () => navigate(`/account-picker`)}> 
+        <button onClick={() => navigate(`/account-picker`)}> 
           { transaction.accountId ? getAccountNameById(transaction.accountId) : 'konto' }
         </button>
       </div>

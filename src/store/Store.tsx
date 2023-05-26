@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './UserSlice'
-import transactionReducer, { fixComplexTypes } from './TransactionSlice'
+import transactionReducer, { transactionSliceFixComplexTypes } from './TransactionSlice'
 
 const saveStoreToLocalStorage = (store: any) => {
   return (next: any) => (action: any) => {
@@ -14,7 +14,7 @@ const preloadStoreFromLocalStorage = () => {
   const storeStateString = localStorage.getItem('appState')
   if (storeStateString !== null) {
     const state = JSON.parse(storeStateString)    
-    fixComplexTypes(state.transactionStore)
+    transactionSliceFixComplexTypes(state.transactionStore)
     return state;
   }
 };

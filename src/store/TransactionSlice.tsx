@@ -76,7 +76,7 @@ export const transactionSlice = createSlice({
   }
 })
 
-export function fixComplexTypes(state: TransactionsState){
+export function transactionSliceFixComplexTypes(state: TransactionsState){
   state.currentTransaction.date = new Date(state.currentTransaction.date)
   state.transactions.forEach(transaction => {
     transaction.date = new Date(transaction.date)

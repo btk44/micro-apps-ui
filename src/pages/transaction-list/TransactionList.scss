@@ -6,33 +6,29 @@
             cursor: pointer;
             //border-left: 5px solid transparent;
 
+            text-align: left;
+            font-weight: 300;
+            color: $text-color;
 
-            a {
-                text-align: left;
-                font-weight: 300;
-                color: $text-color;
-                text-decoration: none;
+            span{
+                margin: 1px 0 2px 5px;
+            }
 
-                span{
-                    margin: 1px 0 2px 5px;
+            div{
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+
+                .main-text{
+                    font-size: larger;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    align-self: center;
                 }
 
-                div{
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-between;
-
-                    .main-text{
-                        font-size: larger;
-                        font-weight: 600;
-                        text-transform: uppercase;
-                        align-self: center;
-                    }
-
-                    .green-text{ color: $green-text-color; }
-                    .red-text{ color: $red-text-color; }
-                    .yellow-text{ color: $yellow-text-color; }
-                }
+                .green-text{ color: $green-text-color; }
+                .red-text{ color: $red-text-color; }
+                .yellow-text{ color: $yellow-text-color; }
             }
         }
     }

@@ -2,7 +2,7 @@ import './TransactionList.scss'
 
 import { useEffect, useState } from 'react';
 import { Transaction } from '../../objects/Transaction';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { initTransactionStore, loadTransactions, selectAccounts, selectCategories, selectTransactions } from '../../store/TransactionSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { selectOwnerId } from '../../store/UserSlice';
@@ -18,6 +18,7 @@ export default function TransactionList(){
   const categories = useAppSelector(selectCategories)
   const transactions = useAppSelector(selectTransactions)
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(initTransactionStore({ownerId: ownerId, 
@@ -48,12 +49,16 @@ export default function TransactionList(){
     setTransactionsPage(transactionsPage + 1)
   }
 
+  function onTransactionSelected(transaction: Transaction){
+    // set current transaction in store
+    navigate('/edit')
+  }
+
   return (
     <div className='transaction-list-component component'>
       <ul>
         { transactions.map((transaction: Transaction) => 
-            <li key={transaction.id} /*style={{borderLeftColor: categories[transaction.categoryId].color}}*/ >
-              <Link to='/edit'>
+            <li key={transaction.id} /*style={{borderLeftColor: categories[transaction.categoryId].color}}*/ onClick={() => onTransactionSelected(transaction)}>
                 <div>
                   <span>{categories[transaction.categoryId].name}</span>
                   <span>{accounts[transaction.accountId].name}</span>
@@ -71,7 +76,6 @@ export default function TransactionList(){
                     <span>{transaction.comment ? transaction.comment : ''}</span>
                   </div>
                 }
-              </Link>
             </li> 
           )
         }
