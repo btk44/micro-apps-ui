@@ -1,14 +1,14 @@
-import './TransactionList.scss'
+import './MobileTransactionList.scss'
 
 import { useEffect, useState } from 'react';
-import { Transaction } from '../../objects/Transaction';
+import { Transaction } from '../../../objects/Transaction';
 import { Link, useNavigate } from 'react-router-dom';
-import { initTransactionStore, loadTransactions, selectAccounts, selectCategories, selectTransactions } from '../../store/TransactionSlice';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { selectOwnerId } from '../../store/UserSlice';
+import { initTransactionStore, loadTransactions, selectAccounts, selectCategories, selectTransactions } from '../../../store/TransactionSlice';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
+import { selectOwnerId } from '../../../store/UserSlice';
 
 
-export default function TransactionList(){
+export default function MobileTransactionList(){
   const transactionPageSize = 2
   const [transactionsPage, setTransactionsPage] = useState(0)
 
@@ -51,11 +51,11 @@ export default function TransactionList(){
 
   function onTransactionSelected(transaction: Transaction){
     // set current transaction in store
-    navigate('/edit')
+    navigate('/mobile-edit')
   }
 
   return (
-    <div className='transaction-list-component component'>
+    <div className='mobile-transaction-list-component component'>
       <ul>
         { transactions.map((transaction: Transaction) => 
             <li key={transaction.id} /*style={{borderLeftColor: categories[transaction.categoryId].color}}*/ onClick={() => onTransactionSelected(transaction)}>

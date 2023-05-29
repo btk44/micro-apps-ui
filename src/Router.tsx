@@ -1,8 +1,9 @@
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import TransactionList from "./pages/transaction-list/TransactionList";
-import TransactionEdit from "./pages/transaction-edit/TransactionEdit";
-import CategoryPicker from "./pages/category-picker/CategoryPicker";
-import AccountPicker from "./pages/account-picker/AccountPicker";
+import TransactionList from "./pages/mobile/mobile-transaction-list/MobileTransactionList";
+import TransactionEdit from "./pages/mobile/mobile-transaction-edit/MobileTransactionEdit";
+import CategoryPicker from "./pages/mobile/mobile-category-picker/MobileCategoryPicker";
+import MobileAccountPicker from "./pages/mobile/mobile-account-picker/MobileAccountPicker";
+
 
 function Router(){
     return (
@@ -11,9 +12,9 @@ function Router(){
             <Routes>
                 <Route path="/">
                 <Route index element={<TransactionList />} />
-                <Route path="edit" element={<TransactionEdit />} />
-                <Route path="category-picker/:id" element={<CategoryPicker />} />
-                <Route path="account-picker" element={<AccountPicker />} />
+                <Route path="mobile-edit" element={<TransactionEdit />} />
+                <Route path="mobile-category-picker/:id" element={<CategoryPicker />} />
+                <Route path="mobile-account-picker" element={<MobileAccountPicker />} />
                 <Route path="*" element={<div>no page!</div>} />
                 </Route>
             </Routes>

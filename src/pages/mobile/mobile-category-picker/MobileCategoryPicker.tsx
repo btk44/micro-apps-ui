@@ -1,8 +1,8 @@
-import './CategoryPicker.scss'
+import './MobileCategoryPicker.scss'
 
-import { useAppDispatch, useAppSelector } from '../../hooks'
-import { Category } from '../../objects/Category'
-import { selectCategories, selectCurrentTransaction, setCurrentTransaction } from '../../store/TransactionSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks'
+import { Category } from '../../../objects/Category'
+import { selectCategories, selectCurrentTransaction, setCurrentTransaction } from '../../../store/TransactionSlice'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 export default function CategoryPicker() {
@@ -18,7 +18,7 @@ export default function CategoryPicker() {
 
   function onCategorySelected(category: Category){
     if (hasSubcategories(category)){
-      navigate(`/category-picker/${category.id}`)
+      navigate(`/mobile-category-picker/${category.id}`)
     }  
     else {
       dispatch(setCurrentTransaction({ ...currentTransaction, categoryId: category.id } ))
@@ -27,7 +27,7 @@ export default function CategoryPicker() {
   }
 
   return (
-    <div className='category-picker-component'>
+    <div className='mobile-category-picker-component'>
       <ul>
         { categories.filter(category => category.parentId === Number(id)).map(category => 
             <li key={category.id} onClick={() => {onCategorySelected(category)}}>

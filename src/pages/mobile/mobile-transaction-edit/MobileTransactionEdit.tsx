@@ -1,13 +1,13 @@
-import './TransactionEdit.scss'
+import './MobileTransactionEdit.scss'
 
 import { useEffect, useState } from 'react'
-import Calculator from '../../components/calculator/Calculator'
-import { TransactionService } from '../../services/TransactionService'
-import { useAppDispatch, useAppSelector } from '../../hooks'
-import { selectAccounts, selectCategories, selectCurrentTransaction } from '../../store/TransactionSlice'
+import Calculator from '../../../components/calculator/Calculator'
+import { TransactionService } from '../../../services/TransactionService'
+import { useAppDispatch, useAppSelector } from '../../../hooks'
+import { selectAccounts, selectCategories, selectCurrentTransaction } from '../../../store/TransactionSlice'
 import { useNavigate } from 'react-router-dom'
 
-export default function TransactionEdit(){
+export default function MobileTransactionEdit(){
   const accounts = useAppSelector(selectAccounts)
   const categories = useAppSelector(selectCategories)
   const currentTransaction = useAppSelector(selectCurrentTransaction)
@@ -53,16 +53,16 @@ export default function TransactionEdit(){
   }
 
   return (
-    <div className={'transaction-edit-component component'}>
+    <div className={'mobile-transaction-edit-component component'}>
       <div className='buttons'>
         <button>{ 'Ania' }</button>
         <button> { getDateString() }</button>
       </div>
       <div className='buttons'>
-        <button onClick={() => navigate(`/category-picker/0`)}>
+        <button onClick={() => navigate(`/mobile-category-picker/0`)}>
           { transaction.categoryId ? getCategoryNameById(transaction.categoryId) : 'kategoria' }
         </button>
-        <button onClick={() => navigate(`/account-picker`)}> 
+        <button onClick={() => navigate(`/mobile-account-picker`)}> 
           { transaction.accountId ? getAccountNameById(transaction.accountId) : 'konto' }
         </button>
       </div>

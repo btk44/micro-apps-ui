@@ -1,11 +1,11 @@
-import './AccountPicker.scss'
+import './MobileAccountPicker.scss'
 
-import { useAppDispatch, useAppSelector } from '../../hooks'
-import { selectAccounts, selectCurrentTransaction, setCurrentTransaction } from '../../store/TransactionSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks'
+import { selectAccounts, selectCurrentTransaction, setCurrentTransaction } from '../../../store/TransactionSlice'
 import { useNavigate } from 'react-router-dom'
-import { Account } from '../../objects/Account'
+import { Account } from '../../../objects/Account'
 
-export default function AccountPicker() {
+export default function MobileAccountPicker() {
   const accounts = Object.values(useAppSelector(selectAccounts))
   const currentTransaction = useAppSelector(selectCurrentTransaction)
   const dispatch = useAppDispatch()
@@ -17,7 +17,7 @@ export default function AccountPicker() {
   }
 
   return (
-    <div className='account-picker-component'>
+    <div className='mobile-account-picker-component'>
       <ul>
         { accounts.map(account => 
             <li key={account.id} onClick={() => {onCategorySelected(account)}}>
