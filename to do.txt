@@ -1,0 +1,2 @@
+- add default account id
+- when to refresh current transaction in store

@@ -4,13 +4,16 @@ import { useEffect, useState } from 'react'
 import Calculator from '../../../components/calculator/Calculator'
 import { TransactionService } from '../../../services/TransactionService'
 import { useAppDispatch, useAppSelector } from '../../../hooks'
-import { selectAccounts, selectCategories, selectCurrentTransaction } from '../../../store/TransactionSlice'
+import { selectAccounts, selectCategories, selectCategoryTypes, selectCurrencies, selectCurrentTransaction } from '../../../store/TransactionSlice'
 import { useNavigate } from 'react-router-dom'
+import { CategoryTypeCode } from '../../../constants/category-type'
 
 export default function MobileTransactionEdit(){
   const accounts = useAppSelector(selectAccounts)
   const categories = useAppSelector(selectCategories)
   const currentTransaction = useAppSelector(selectCurrentTransaction)
+  const currencies = useAppSelector(selectCurrencies)
+  const categoryTypes = useAppSelector(selectCategoryTypes)
   const dispatch = useAppDispatch()
 
   const [transaction, setTransaction] = useState(currentTransaction)
@@ -34,6 +37,20 @@ export default function MobileTransactionEdit(){
     return account ? account.name : ''
   }
 
+  function getAmountSign(): string {
+    const categoryType = transaction.categoryId > 0 ? categoryTypes[categories[transaction.categoryId].typeId].name : ''
+    return categoryType === CategoryTypeCode.Income ? '+' : '-'
+  }
+
+  function getTransactionCurrencyCode(): string {
+    return transaction.accountId > 0 ? currencies[accounts[transaction.accountId].currencyId].code : ''
+  }
+
+  function isCategoryTypeActive(categoryTypeCode: string): boolean {
+    const transactionCategoryType = transaction.categoryId > 0 ? categoryTypes[categories[transaction.categoryId].typeId].code : ''
+    return transactionCategoryType === categoryTypeCode
+  }
+
   function getDateString(): string {
     const year = transaction.date.getFullYear()
     let day = (transaction.date.getDate()).toString()
@@ -54,9 +71,17 @@ export default function MobileTransactionEdit(){
 
   return (
     <div className={'mobile-transaction-edit-component component'}>
-      <div className='buttons'>
-        <button>{ 'Ania' }</button>
-        <button> { getDateString() }</button>
+      <div className='category-types-section'>
+        { Object.values(categoryTypes).map(type => 
+          <button className={ isCategoryTypeActive(type.code) ? 'active-button' : '' }> 
+            {type.name} 
+          </button> 
+        )}
+      </div>
+      <div className='amount-section'>
+        <span className='sign'>{ getAmountSign() }</span>
+        <span className='amount'>{ transaction.amount }</span>
+        <span className='currency'>{ getTransactionCurrencyCode() }</span>
       </div>
       <div className='buttons'>
         <button onClick={() => navigate(`/mobile-category-picker/0`)}>

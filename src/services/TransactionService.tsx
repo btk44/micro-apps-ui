@@ -37,9 +37,22 @@ export const TransactionService = {
         return await this.Search(`${this.apiUrl}/${this.currencyUrl}`, { ...GetDefaultCurrencySearchFilters(), ...(filters || {}) })
     },
 
+    GetCategoryTypes: async function() {    
+        return await this.Get(`${this.apiUrl}/${this.categoryUrl}/types`)
+    },
+
     Search: async function(url: string, filters: any) {
         try{
             const response = await fetch(`${url}/search`, { method: 'POST', body: JSON.stringify(filters) })
+            return await response.json()
+        } catch(error) {
+            return null
+        }
+    },
+
+    Get: async function(url: string) {
+        try{
+            const response = await fetch(`${url}`, { method: 'GET' })
             return await response.json()
         } catch(error) {
             return null

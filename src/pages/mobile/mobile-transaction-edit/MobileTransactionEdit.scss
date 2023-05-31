@@ -1,13 +1,37 @@
 @import '../../../App.scss';
 
 .mobile-transaction-edit-component {
-    .buttons {
+    .category-types-section {
         display: flex;
         justify-content: space-between; 
         gap: 1px;
         button {
             width: 0;
             flex: 1 1 0px;
+        }
+        .active-button {
+            background-color: $primary-color-light;
+        }
+    }
+
+    .amount-section{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        span{
+            font-size: 6em;
+            align-self: center;
+            padding: 0px 10px;
+            text-align: right;
+            text-overflow: ellipsis; // doesn;t work
+        }
+
+        .amount{
+            flex-grow: 2;
+        }
+
+        .currency{
+            font-size: 2em;
         }
     }
 

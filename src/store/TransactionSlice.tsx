@@ -7,16 +7,18 @@ import { Transaction } from '../objects/Transaction'
 import { RootState } from './Store'
 import { TransactionSearchFilters } from '../objects/TransactionSearchFilters'
 import { GetEmptyTransaction } from '../objects/Transaction'
+import { CategoryType } from '../objects/CategoryType'
 
 // separate this store in the future if needed
 
 interface TransactionsState {
   loading: boolean,
   currentTransaction: Transaction,
-  accounts: Array<Account>,
-  categories: Array<Category>,
-  currencies: Array<Currency>,
-  transactions: Array<Transaction>
+  accounts: { [key: number]: Account },
+  categories:  { [key: number]: Category },
+  currencies:  { [key: number]: Currency },
+  transactions: Array<Transaction>,
+  categoryTypes:  { [key: number]: CategoryType }
 }
 
 const initialState: TransactionsState = {
@@ -25,7 +27,8 @@ const initialState: TransactionsState = {
   accounts: [],
   categories: [],
   currencies: [],
-  transactions: []
+  transactions: [],
+  categoryTypes: []
 }
 
 export const initTransactionStore = createAsyncThunk('transaction/initTransactionStore', async (parameters: TransactionSearchFilters) => {
@@ -33,15 +36,18 @@ export const initTransactionStore = createAsyncThunk('transaction/initTransactio
       const accountsCall = TransactionService.SearchAccounts({ownerId: parameters.ownerId})
       const categoryCall = TransactionService.SearchCategories({ownerId: parameters.ownerId})
       const currencyCall = TransactionService.SearchCurrencies()
+      const categoryTypesCall = TransactionService.GetCategoryTypes()
 
       return Promise
-        .all([transactionCall, accountsCall, categoryCall, currencyCall])
-        .then(([transactionsResponse, accountsResponse, categoriesResponse, currencyResponse]) => {
+        .all([transactionCall, accountsCall, categoryCall, currencyCall, categoryTypesCall])
+        .then(([transactionsResponse, accountsResponse, categoriesResponse, currencyResponse, categoryTypesResponse]) => {
           const accountsDict: any = Object.assign({}, ...accountsResponse.map((x: Account) => ({[x.id]: x})));
           const flattenCategories = categoriesResponse.concat(categoriesResponse.flatMap((x: Category) => x.subcategories))
           const categoriesDict: any = Object.assign({}, ...flattenCategories.map((x: Category) => ({[x.id]: x})));
           const currenciesDict: any = Object.assign({}, ...currencyResponse.map((x: Currency) => ({[x.id]: x})));
-          return { accounts: accountsDict, categories: categoriesDict, transactions: transactionsResponse, currencies: currenciesDict }
+          const categoryTypesDict: any = Object.assign({}, ...categoryTypesResponse.map((x: CategoryType) => ({[x.id]: x})));
+          return { accounts: accountsDict, categories: categoriesDict, transactions: transactionsResponse, 
+            currencies: currenciesDict, categoryTypes: categoryTypesDict }
         })
 })
 
@@ -67,6 +73,7 @@ export const transactionSlice = createSlice({
       state.categories = action.payload.categories
       state.transactions = action.payload.transactions
       state.currencies = action.payload.currencies
+      state.categoryTypes = action.payload.categoryTypes
     })
     builder.addCase(loadTransactions.pending, (state: TransactionsState) => { state.loading = true })
     builder.addCase(loadTransactions.rejected, (state: TransactionsState) => { state.loading = false })
@@ -93,6 +100,7 @@ export const selectCategories = (state: RootState) => state.transactionStore.cat
 export const selectCurrencies = (state: RootState) => state.transactionStore.currencies
 export const selectTransactions = (state: RootState) => state.transactionStore.transactions
 export const selectCurrentTransaction = (state: RootState) => state.transactionStore.currentTransaction
+export const selectCategoryTypes = (state: RootState) => state.transactionStore.categoryTypes
 
 export const { clearTransactions, setCurrentTransaction } = transactionSlice.actions
 
