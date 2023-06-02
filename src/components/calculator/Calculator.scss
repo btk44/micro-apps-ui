@@ -7,9 +7,8 @@ $row-height: calc($form-control-default-h*1.5);
     height: 100%;
     display: grid;
     grid-template-columns: 3fr 1fr;
-    grid-template-rows: $row-height calc($row-height*4);
+    grid-template-rows: calc($row-height*4);
     grid-template-areas: 
-        "display display"
         "buttons-left buttons-right";
 
     span {

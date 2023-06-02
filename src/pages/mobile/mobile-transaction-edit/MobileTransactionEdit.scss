@@ -15,27 +15,42 @@
     }
 
     .amount-section{
-        width: 100%;
-        display: flex;
-        justify-content: space-evenly;
+        display: grid;
+        grid-template-columns: 1fr 8fr 3fr;
+        align-items: center;
+        height: 7em;
+
         span{
-            font-size: 6em;
+            font-size: 3em;
             align-self: center;
-            padding: 0px 10px;
             text-align: right;
             text-overflow: ellipsis; // doesn;t work
+            display: inline-block;
+            overflow: hidden;
+            padding: 0 5px;
         }
 
-        .amount{
-            flex-grow: 2;
+        .sign{
+            text-align: left;
         }
 
         .currency{
             font-size: 2em;
         }
+
+        .font-size-6 { font-size: 6em; }
+        .font-size-4 { font-size: 4em; }
+        .font-size-3 { font-size: 3em; }
+        .font-size-2 { font-size: 2em; }
     }
 
-    .inactive {
-
+    .account-category-section{
+        display: flex;
+        justify-content: space-between; 
+        gap: 1px;
+        button {
+            width: 0;
+            flex: 1 1 0px;
+        }
     }
 }

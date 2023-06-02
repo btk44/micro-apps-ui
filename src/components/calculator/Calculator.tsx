@@ -1,4 +1,3 @@
-import React from 'react'
 import { useState } from 'react'
 import './Calculator.scss'
 import MathSymbols from './MathSymbols'
@@ -81,7 +80,6 @@ export default function Calculator(props: CalculatorProps) {
 
   return (
     <div className='calculator-component'>
-      <span>{ calculatorState.resultText }</span>
       <div className='numeric-buttons'>
         { numericButtonTexts.map(buttonText =>
             <button key={buttonText} onClick={numericButtonClicked}>
