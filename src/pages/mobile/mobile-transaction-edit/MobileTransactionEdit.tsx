@@ -100,12 +100,9 @@ export default function MobileTransactionEdit(){
         </button>
       </div>
       <input type='text' placeholder='kto / komu'></input>
-      
-      { <Calculator 
-        initialValue={transaction.amount}
-        updateValue={onAmountChange}></Calculator> }
-      <button onClick={saveTransaction}> save </button>
-      <input type='text' placeholder={progress} readOnly></input>
+      <div className='calculator-section'>
+        { <Calculator initialValue={transaction.amount} updateValue={onAmountChange}></Calculator> }
+      </div>
     </div>
   );
 }

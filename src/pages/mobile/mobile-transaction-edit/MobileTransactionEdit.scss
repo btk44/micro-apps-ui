@@ -16,7 +16,7 @@
 
     .amount-section{
         display: grid;
-        grid-template-columns: 1fr 8fr 3fr;
+        grid-template-columns: 2.5fr 8fr 2.5fr;
         align-items: center;
         height: 7em;
 
@@ -52,5 +52,10 @@
             width: 0;
             flex: 1 1 0px;
         }
+    }
+
+    .calculator-section{
+        height: 40vh;
+        margin: 1px 0;
     }
 }
