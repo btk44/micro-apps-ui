@@ -62,6 +62,14 @@ export default function MobileTransactionEdit(){
     return `${year}/${month}/${day}`
   }
 
+  function getAmountTextSize(){
+    var length = transaction.amount.toString().length;
+    if (length > 7) return 2
+    if (length > 5) return 3
+    if (length > 3) return 4
+    return 6;
+  }
+
   function saveTransaction(): void {
     setProgress('saving...')
     TransactionService.SaveTransactions([transaction]).then(
@@ -80,18 +88,19 @@ export default function MobileTransactionEdit(){
       </div>
       <div className='amount-section'>
         <span className='sign'>{ getAmountSign() }</span>
-        <span className='amount'>{ transaction.amount }</span>
+        <span className={'amount font-size-' + getAmountTextSize()}>{ transaction.amount }</span>
         <span className='currency'>{ getTransactionCurrencyCode() }</span>
       </div>
-      <div className='buttons'>
-        <button onClick={() => navigate(`/mobile-category-picker/0`)}>
-          { transaction.categoryId ? getCategoryNameById(transaction.categoryId) : 'kategoria' }
-        </button>
+      <div className='account-category-section'>
         <button onClick={() => navigate(`/mobile-account-picker`)}> 
           { transaction.accountId ? getAccountNameById(transaction.accountId) : 'konto' }
         </button>
+        <button onClick={() => navigate(`/mobile-category-picker/0`)}>
+          { transaction.categoryId ? getCategoryNameById(transaction.categoryId) : 'kategoria' }
+        </button>
       </div>
       <input type='text' placeholder='kto / komu'></input>
+      
       { <Calculator 
         initialValue={transaction.amount}
         updateValue={onAmountChange}></Calculator> }
