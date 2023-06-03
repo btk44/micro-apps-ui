@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Calculator from '../../../components/calculator/Calculator'
 import { TransactionService } from '../../../services/TransactionService'
 import { useAppDispatch, useAppSelector } from '../../../hooks'
-import { selectAccounts, selectCategories, selectCategoryTypes, selectCurrencies, selectCurrentTransaction } from '../../../store/TransactionSlice'
+import { selectAccounts, selectCategories, selectCategoryTypes, selectCurrencies, selectCurrentTransaction, setCurrentTransaction } from '../../../store/TransactionSlice'
 import { useNavigate } from 'react-router-dom'
 import { CategoryTypeCode } from '../../../constants/category-type'
 
@@ -46,9 +46,8 @@ export default function MobileTransactionEdit(){
     return transaction.accountId > 0 ? currencies[accounts[transaction.accountId].currencyId].code : ''
   }
 
-  function isCategoryTypeActive(categoryTypeCode: string): boolean {
-    const transactionCategoryType = transaction.categoryId > 0 ? categoryTypes[categories[transaction.categoryId].typeId].code : ''
-    return transactionCategoryType === categoryTypeCode
+  function getTransactionCategoryType(): string {
+    return transaction.categoryId > 0 ? categoryTypes[categories[transaction.categoryId].typeId].code : ''
   }
 
   function getDateString(): string {
@@ -77,11 +76,23 @@ export default function MobileTransactionEdit(){
     )
   }
 
+  function onTransactionCategoryTypeChange(typeCode: string): void {
+    const categoryTypeId = Object.values(categoryTypes).filter(x => x.code === typeCode)[0].id
+    dispatch(setCurrentTransaction({ 
+      ...currentTransaction, 
+      categoryId: Object.values(categories)
+                    .concat(Object.values(categories).flatMap(x => x.subcategories))
+                    .filter(x => x.parentId === 0 && x.typeId === categoryTypeId)[0].id
+    }))
+  }
+
   return (
     <div className={'mobile-transaction-edit-component component'}>
       <div className='category-types-section'>
         { Object.values(categoryTypes).map(type => 
-          <button className={ isCategoryTypeActive(type.code) ? 'active-button' : '' }> 
+          <button key={type.code} 
+                  className={ type.code === getTransactionCategoryType() ? 'active-button' : '' }
+                  onClick={() => onTransactionCategoryTypeChange(type.code)}> 
             {type.name} 
           </button> 
         )}
@@ -98,8 +109,9 @@ export default function MobileTransactionEdit(){
         <button onClick={() => navigate(`/mobile-category-picker/0`)}>
           { transaction.categoryId ? getCategoryNameById(transaction.categoryId) : 'kategoria' }
         </button>
+        { getTransactionCategoryType() !== CategoryTypeCode.Transfer && <input type='text' placeholder='kto / komu'></input> }
+        { getTransactionCategoryType() === CategoryTypeCode.Transfer && <input type='text' placeholder='1EUR = 14.5235PLN'></input>}
       </div>
-      <input type='text' placeholder='kto / komu'></input>
       <div className='calculator-section'>
         { <Calculator initialValue={transaction.amount} updateValue={onAmountChange}></Calculator> }
       </div>

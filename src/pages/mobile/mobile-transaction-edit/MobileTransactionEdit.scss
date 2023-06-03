@@ -46,11 +46,12 @@
 
     .account-category-section{
         display: flex;
-        justify-content: space-between; 
+        flex-wrap: wrap;
+        justify-content: space-evenly;
         gap: 1px;
-        button {
+        button, input {
             width: 0;
-            flex: 1 1 0px;
+            flex: 1 0 40%;
         }
     }
 
