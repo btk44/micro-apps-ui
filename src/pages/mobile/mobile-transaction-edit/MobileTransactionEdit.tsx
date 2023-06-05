@@ -16,8 +16,12 @@ export default function MobileTransactionEdit(){
   const categoryTypes = useAppSelector(selectCategoryTypes)
   const dispatch = useAppDispatch()
 
-  const [transaction, setTransaction] = useState(currentTransaction)
+  const [transaction, setTransaction] = useState(structuredClone(currentTransaction))
   const [progress, setProgress] = useState('...')
+
+  useEffect(() => {
+    dispatch(setCurrentTransaction(structuredClone(transaction)))
+  }, [transaction]);
 
   const navigate = useNavigate()
 
@@ -25,6 +29,14 @@ export default function MobileTransactionEdit(){
 
   function onAmountChange(amount: number): void {
     setTransaction({ ...transaction, amount: amount })
+  }
+
+  function onTransactionCategoryTypeChange(typeCode: string): void {
+    const categoryTypeId = Object.values(categoryTypes).filter(x => x.code === typeCode)[0].id
+    setTransaction({ ...transaction, 
+      categoryId: Object.values(categories)
+                        .concat(Object.values(categories).flatMap(x => x.subcategories))
+                        .filter(x => x.parentId === 0 && x.typeId === categoryTypeId)[0].id })
   }
 
   function getCategoryNameById(id: number){
@@ -38,8 +50,8 @@ export default function MobileTransactionEdit(){
   }
 
   function getAmountSign(): string {
-    const categoryType = transaction.categoryId > 0 ? categoryTypes[categories[transaction.categoryId].typeId].name : ''
-    return categoryType === CategoryTypeCode.Income ? '+' : '-'
+    const categoryType = transaction.categoryId > 0 ? categoryTypes[categories[transaction.categoryId].typeId].code : ''
+    return categoryType === CategoryTypeCode.Income ? '+' : categoryType === CategoryTypeCode.Expense ? '-' : ''
   }
 
   function getTransactionCurrencyCode(): string {
@@ -74,16 +86,6 @@ export default function MobileTransactionEdit(){
     TransactionService.SaveTransactions([transaction]).then(
       () => setProgress('done!')
     )
-  }
-
-  function onTransactionCategoryTypeChange(typeCode: string): void {
-    const categoryTypeId = Object.values(categoryTypes).filter(x => x.code === typeCode)[0].id
-    dispatch(setCurrentTransaction({ 
-      ...currentTransaction, 
-      categoryId: Object.values(categories)
-                    .concat(Object.values(categories).flatMap(x => x.subcategories))
-                    .filter(x => x.parentId === 0 && x.typeId === categoryTypeId)[0].id
-    }))
   }
 
   return (
