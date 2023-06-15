@@ -1,9 +1,11 @@
-import { Provider } from 'react-redux'
 import './App.scss'
-import Router from './Router'
+
+import { Provider } from 'react-redux'
 import { AuthInterceptor } from './services/Interceptor'
 import store from './store/Store'
 import { useEffect } from 'react'
+import { RouterProvider } from 'react-router-dom'
+import router from './Router'
 
 
 function App() {
@@ -19,7 +21,7 @@ function App() {
     <Provider store={store}>
       <div className="app light-theme">
         <header className="app-header"></header>
-        <Router/>
+        <RouterProvider router={router} />
         <footer></footer>
       </div>
     </Provider>

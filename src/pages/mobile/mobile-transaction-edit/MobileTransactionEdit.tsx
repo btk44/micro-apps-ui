@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks'
 import { selectAccounts, selectCategories, selectCategoryTypes, selectCurrencies, selectCurrentTransaction, setCurrentTransaction } from '../../../store/TransactionSlice'
 import { useNavigate } from 'react-router-dom'
 import { CategoryTypeCode } from '../../../constants/category-type'
+import { GetEmptyTransaction } from '../../../objects/Transaction'
 
 export default function MobileTransactionEdit(){
   const accounts = useAppSelector(selectAccounts)
@@ -16,27 +17,49 @@ export default function MobileTransactionEdit(){
   const categoryTypes = useAppSelector(selectCategoryTypes)
   const dispatch = useAppDispatch()
 
+  const navigate = useNavigate()
+
   const [transaction, setTransaction] = useState(structuredClone(currentTransaction))
-  const [progress, setProgress] = useState('...')
+  const [transactionCategoryTypeCode, setTransactionCategoryTypeCode] = useState(CategoryTypeCode.Expense.toString())
+
+  useEffect(() => { setTransactionCategoryTypeCode(
+    transaction.categoryId > 0 ? categoryTypes[categories[transaction.categoryId].typeId].code : '') })
 
   useEffect(() => {
     dispatch(setCurrentTransaction(structuredClone(transaction)))
   }, [transaction]);
 
-  const navigate = useNavigate()
-
-  useEffect(() => {  }, []);
-
   function onAmountChange(amount: number): void {
     setTransaction({ ...transaction, amount: amount })
   }
 
-  function onTransactionCategoryTypeChange(typeCode: string): void {
-    const categoryTypeId = Object.values(categoryTypes).filter(x => x.code === typeCode)[0].id
-    setTransaction({ ...transaction, 
-      categoryId: Object.values(categories)
-                        .concat(Object.values(categories).flatMap(x => x.subcategories))
-                        .filter(x => x.parentId === 0 && x.typeId === categoryTypeId)[0].id })
+  function onTransactionCategoryTypeChange(categoryTypeCode: string): void {
+    const categoryType = Object.values(categoryTypes).filter(x => x.code === categoryTypeCode)[0]
+    if(!categoryType){
+      showMessage(`no category type for: ${categoryTypeCode}`)
+      return
+    }
+    
+    const categoriesFlatList =  Object.values(categories).concat(Object.values(categories).flatMap(x => x.subcategories))
+    const firstCategoryFromType = categoriesFlatList.filter(x => x.parentId === 0 && x.typeId === categoryType.id)[0]
+    if(!firstCategoryFromType){
+      showMessage(`no category for type ${categoryType.name}`)
+      return
+    }
+
+    const updatedTransaction = structuredClone(transaction)
+
+    if (categoryTypeCode === CategoryTypeCode.Transfer)
+      updatedTransaction.groupTransactions = [{ ...GetEmptyTransaction(), amount: -1 * transaction.amount }]
+
+    updatedTransaction.categoryId = firstCategoryFromType.id
+
+    setTransaction(updatedTransaction)
+    setTransactionCategoryTypeCode(categoryTypeCode)
+  }
+
+  function showMessage(message: String){ // to do : move it outside component
+    alert(message)
   }
 
   function getCategoryNameById(id: number){
@@ -49,28 +72,17 @@ export default function MobileTransactionEdit(){
     return account ? account.name : ''
   }
 
-  function getAmountSign(): string {
-    const categoryType = transaction.categoryId > 0 ? categoryTypes[categories[transaction.categoryId].typeId].code : ''
-    return categoryType === CategoryTypeCode.Income ? '+' : categoryType === CategoryTypeCode.Expense ? '-' : ''
-  }
-
   function getTransactionCurrencyCode(): string {
     return transaction.accountId > 0 ? currencies[accounts[transaction.accountId].currencyId].code : ''
   }
 
-  function getTransactionCategoryType(): string {
-    return transaction.categoryId > 0 ? categoryTypes[categories[transaction.categoryId].typeId].code : ''
+  function getAmountSign(): string {
+    const categoryTypeCode = transactionCategoryTypeCode
+    return categoryTypeCode === CategoryTypeCode.Income ? '+' : categoryTypeCode === CategoryTypeCode.Expense ? '-' : ''
   }
 
-  function getDateString(): string {
-    const year = transaction.date.getFullYear()
-    let day = (transaction.date.getDate()).toString()
-    let month = (transaction.date.getMonth()+1).toString()
-
-    day = day.length < 2 ? `0${day}` : day
-    month = month.length < 2 ? `0${month}` : month
-
-    return `${year}/${month}/${day}`
+  function isTransfer(){
+    return transactionCategoryTypeCode === CategoryTypeCode.Transfer
   }
 
   function getAmountTextSize(){
@@ -81,19 +93,19 @@ export default function MobileTransactionEdit(){
     return 6;
   }
 
-  function saveTransaction(): void {
-    setProgress('saving...')
-    TransactionService.SaveTransactions([transaction]).then(
-      () => setProgress('done!')
-    )
-  }
+  // function saveTransaction(): void {
+  //   setProgress('saving...')
+  //   TransactionService.SaveTransactions([transaction]).then(
+  //     () => setProgress('done!')
+  //   )
+  // }
 
   return (
     <div className={'mobile-transaction-edit-component component'}>
       <div className='category-types-section'>
         { Object.values(categoryTypes).map(type => 
           <button key={type.code} 
-                  className={ type.code === getTransactionCategoryType() ? 'active-button' : '' }
+                  className={ type.code === transactionCategoryTypeCode ? 'active-button' : '' }
                   onClick={() => onTransactionCategoryTypeChange(type.code)}> 
             {type.name} 
           </button> 
@@ -105,14 +117,22 @@ export default function MobileTransactionEdit(){
         <span className='currency'>{ getTransactionCurrencyCode() }</span>
       </div>
       <div className='account-category-section'>
-        <button onClick={() => navigate(`/mobile-account-picker`)}> 
+        <button onClick={() => navigate(`/mobile-account-picker?isPrimary=true`)}> 
           { transaction.accountId ? getAccountNameById(transaction.accountId) : 'konto' }
         </button>
-        <button onClick={() => navigate(`/mobile-category-picker/0`)}>
-          { transaction.categoryId ? getCategoryNameById(transaction.categoryId) : 'kategoria' }
-        </button>
-        { getTransactionCategoryType() !== CategoryTypeCode.Transfer && <input type='text' placeholder='kto / komu'></input> }
-        { getTransactionCategoryType() === CategoryTypeCode.Transfer && <input type='text' placeholder='1EUR = 14.5235PLN'></input>}
+        { isTransfer() && <>
+          <button className='arrow'>&#8594;</button> 
+          <button onClick={() => navigate(`/mobile-account-picker?isPrimary=false`)}> 
+            { transaction.accountId ? getAccountNameById(transaction.accountId) : 'konto' }
+          </button>
+          <input type='text' placeholder={ '1EUR = 14.5235PLN'}></input>
+          </> }
+        { !isTransfer() && <>
+          <button onClick={() => navigate(`/mobile-category-picker/0`)}>
+            { transaction.categoryId ? getCategoryNameById(transaction.categoryId) : 'kategoria' }
+          </button>
+          <input type='text' placeholder='kto / komu'></input>
+          </> }
       </div>
       <div className='calculator-section'>
         { <Calculator initialValue={transaction.amount} updateValue={onAmountChange}></Calculator> }
