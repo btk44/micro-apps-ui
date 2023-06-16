@@ -2,7 +2,7 @@ import './MobileTransactionList.scss'
 
 import { useEffect, useState } from 'react';
 import { Transaction } from '../../../objects/Transaction';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { initTransactionStore, loadTransactions, selectAccounts, selectCategories, selectTransactions } from '../../../store/TransactionSlice';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { selectOwnerId } from '../../../store/UserSlice';
@@ -10,7 +10,7 @@ import { selectOwnerId } from '../../../store/UserSlice';
 
 export default function MobileTransactionList(){
   const transactionPageSize = 2
-  const [transactionsPage, setTransactionsPage] = useState(0)
+  const [transactionsPage, setTransactionsPage] = useState(1)
 
   const ownerId = useAppSelector(selectOwnerId)
 
@@ -19,12 +19,6 @@ export default function MobileTransactionList(){
   const transactions = useAppSelector(selectTransactions)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-
-  useEffect(() => {
-    dispatch(initTransactionStore({ownerId: ownerId, 
-      take: transactionPageSize, offset: transactionsPage * transactionPageSize}))
-    setTransactionsPage(transactionsPage + 1)
-  }, []);
 
   function getMainInfoText(transaction: Transaction): string {
     if(transaction.groupTransactions?.length){

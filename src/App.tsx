@@ -6,6 +6,7 @@ import store from './store/Store'
 import { useEffect } from 'react'
 import { RouterProvider } from 'react-router-dom'
 import router from './Router'
+import StoreInitializer from './store/StoreInitializer'
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
     <Provider store={store}>
       <div className="app light-theme">
         <header className="app-header"></header>
+        <StoreInitializer></StoreInitializer>
         <RouterProvider router={router} />
         <footer></footer>
       </div>
