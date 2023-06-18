@@ -4,6 +4,7 @@ export function AuthInterceptor() {
         let [resource, config ] = args
         const headers = new Headers()
         headers.append('Authorization', 'Bearer to.ke.n')
+        headers.append('Access-Control-Allow-Origin', '*')
         headers.append('Content-Type', 'application/json')
         headers.append('accept', 'text/plain')
 
