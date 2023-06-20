@@ -1,23 +1,22 @@
 import { configureStore } from '@reduxjs/toolkit'
-import userReducer from './UserSlice'
-import transactionReducer, { transactionSliceFixComplexTypes } from './TransactionSlice'
+import userReducer, { loadUserStoreFromLocalStorage, saveUserStoreStateToLocalStorage } from './UserSlice'
+import transactionReducer, { saveTransactionStoreStateToLocalStorage, loadTransactionStoreStateFromLocalStorage } from './TransactionSlice'
 
 export const storeLocalStorageKey = 'AppState'
 
 const saveStoreToLocalStorage = (store: any) => {
   return (next: any) => (action: any) => {
     const result = next(action);
-    localStorage.setItem(storeLocalStorageKey, JSON.stringify(store.getState()));
+    saveTransactionStoreStateToLocalStorage(action)
+    saveUserStoreStateToLocalStorage(action)
     return result;
   };
 };
 
 const preloadStoreFromLocalStorage = () => {
-  const storeStateString = localStorage.getItem(storeLocalStorageKey)
-  if (storeStateString !== null) {
-    const state = JSON.parse(storeStateString)    
-    transactionSliceFixComplexTypes(state.transactionStore)
-    return state;
+  return {
+    transactionStore: loadTransactionStoreStateFromLocalStorage(),
+    userStore: loadUserStoreFromLocalStorage()
   }
 };
 

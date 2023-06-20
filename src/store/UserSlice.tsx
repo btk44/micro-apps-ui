@@ -11,6 +11,14 @@ const initialState: UserState = {
     token: ''
 }
 
+export const saveUserStoreStateToLocalStorage = (action: any) => {
+    // nothing for now
+};
+
+export const loadUserStoreFromLocalStorage = () : UserState => {
+  return initialState;
+}
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
