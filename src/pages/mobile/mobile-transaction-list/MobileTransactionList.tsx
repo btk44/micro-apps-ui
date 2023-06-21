@@ -9,7 +9,7 @@ import { selectOwnerId } from '../../../store/UserSlice';
 
 
 export default function MobileTransactionList(){
-  const transactionPageSize = 2
+  const transactionPageSize = 5
   const [transactionsPage, setTransactionsPage] = useState(1)
 
   const ownerId = useAppSelector(selectOwnerId)
@@ -19,6 +19,10 @@ export default function MobileTransactionList(){
   const transactions = useAppSelector(selectTransactions)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    loadMoreTransactions()  //fix this
+  }, []);
 
   function getMainInfoText(transaction: Transaction): string {
     if(transaction.groupTransactions?.length){

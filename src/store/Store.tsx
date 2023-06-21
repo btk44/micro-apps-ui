@@ -2,9 +2,9 @@ import { configureStore } from '@reduxjs/toolkit'
 import userReducer, { loadUserStoreFromLocalStorage, saveUserStoreStateToLocalStorage } from './UserSlice'
 import transactionReducer, { saveTransactionStoreStateToLocalStorage, loadTransactionStoreStateFromLocalStorage } from './TransactionSlice'
 
-export const storeLocalStorageKey = 'AppState'
+export const storeLocalStorageKey = 'expense-tracker'
 
-const saveStoreToLocalStorage = (store: any) => {
+const saveStoreToLocalStorage = () => {
   return (next: any) => (action: any) => {
     const result = next(action);
     saveTransactionStoreStateToLocalStorage(action)

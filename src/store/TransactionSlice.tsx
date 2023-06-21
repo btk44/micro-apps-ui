@@ -11,6 +11,8 @@ import { CategoryType } from '../objects/CategoryType'
 
 // separate this store in the future if needed
 
+const transactionSliceName = 'transaction'
+
 interface TransactionsState {
   loading: boolean,
   currentTransaction: Transaction,
@@ -18,7 +20,8 @@ interface TransactionsState {
   categories:  { [key: number]: Category },
   currencies:  { [key: number]: Currency },
   transactions: Array<Transaction>,
-  categoryTypes:  { [key: number]: CategoryType }
+  categoryTypes:  { [key: number]: CategoryType },
+  [index: string]: any;
 }
 
 const initialState: TransactionsState = {
@@ -31,34 +34,34 @@ const initialState: TransactionsState = {
   categoryTypes: []
 }
 
-export const initTransactionStore = createAsyncThunk('transaction/initTransactionStore', async (parameters: TransactionSearchFilters) => {
-      const transactionCall = TransactionService.SearchTransactions(parameters)
-      const accountsCall = TransactionService.SearchAccounts({ownerId: parameters.ownerId})
-      const categoryCall = TransactionService.SearchCategories({ownerId: parameters.ownerId})
+export const initTransactionStore = createAsyncThunk(transactionSliceName + '/initTransactionStore', async (ownerId: number) => {
+      //const transactionCall = TransactionService.SearchTransactions(parameters)
+      const accountsCall = TransactionService.SearchAccounts({ownerId: ownerId})
+      const categoryCall = TransactionService.SearchCategories({ownerId: ownerId})
       const currencyCall = TransactionService.SearchCurrencies()
       const categoryTypesCall = TransactionService.GetCategoryTypes()
 
       return Promise
-        .all([transactionCall, accountsCall, categoryCall, currencyCall, categoryTypesCall])
-        .then(([transactionsResponse, accountsResponse, categoriesResponse, currencyResponse, categoryTypesResponse]) => {
+        .all([/*transactionCall,*/ accountsCall, categoryCall, currencyCall, categoryTypesCall])
+        .then(([/*transactionsResponse,*/ accountsResponse, categoriesResponse, currencyResponse, categoryTypesResponse]) => {
           const accountsDict: any = Object.assign({}, ...accountsResponse.map((x: Account) => ({[x.id]: x})));
           const flattenCategories = categoriesResponse.concat(categoriesResponse.flatMap((x: Category) => x.subcategories))
           const categoriesDict: any = Object.assign({}, ...flattenCategories.map((x: Category) => ({[x.id]: x})));
           const currenciesDict: any = Object.assign({}, ...currencyResponse.map((x: Currency) => ({[x.id]: x})));
           const categoryTypesDict: any = Object.assign({}, ...categoryTypesResponse.map((x: CategoryType) => ({[x.id]: x})));
-          return { accounts: accountsDict, categories: categoriesDict, transactions: transactionsResponse, 
+          return { accounts: accountsDict, categories: categoriesDict, transactions: [] /*transactionsResponse*/, 
             currencies: currenciesDict, categoryTypes: categoryTypesDict }
         })
 })
 
-export const loadTransactions = createAsyncThunk('transaction/loadTransactions', async (parameters: TransactionSearchFilters) => {
+export const loadTransactions = createAsyncThunk(transactionSliceName + '/loadTransactions', async (parameters: TransactionSearchFilters) => {
   const transactionCall = TransactionService.SearchTransactions(parameters)
 
   return transactionCall.then((transactionsResponse) => { return transactionsResponse })
 })
 
 export const transactionSlice = createSlice({
-  name: 'transaction',
+  name: transactionSliceName,
   initialState,
   reducers: {
     clearTransactions: (state) => { state.transactions = [] },
@@ -83,69 +86,6 @@ export const transactionSlice = createSlice({
   }
 })
 
-export const saveTransactionStoreStateToLocalStorage = (action: any) => {
-    if(action.type === 'transaction/setCurrentTransaction'){
-      localStorage.setItem('currentTransaction', JSON.stringify(action.payload));
-    }
-
-    if(action.type === 'transaction/initTransactionStore/fulfilled'){
-      localStorage.setItem('transactions', JSON.stringify(action.payload.transactions));
-      localStorage.setItem('accounts', JSON.stringify(action.payload.accounts));
-      localStorage.setItem('categories', JSON.stringify(action.payload.categories));
-      localStorage.setItem('categoryTypes', JSON.stringify(action.payload.categoryTypes));
-      localStorage.setItem('currencies', JSON.stringify(action.payload.currencies));
-    }
-
-    if(action.type === 'transaction/loadTransactions/fulfilled'){
-      localStorage.setItem('transactions', JSON.stringify(action.payload));
-    }
-}
-
-export const loadTransactionStoreStateFromLocalStorage = () : TransactionsState => {
-  const state : TransactionsState = structuredClone(initialState)
-
-  const currentTransactionString = localStorage.getItem('currentTransaction')
-  if (currentTransactionString !== null) {
-    const currentTransaction: Transaction = JSON.parse(currentTransactionString)
-    currentTransaction.date = new Date(currentTransaction.date)
-    state.currentTransaction = currentTransaction
-  }
-
-  const accountsString = localStorage.getItem('accounts')
-  if (accountsString !== null) {
-    state.accounts = JSON.parse(accountsString)
-  }
-
-  const categoriesString = localStorage.getItem('categories')
-  if (categoriesString !== null) {
-    state.categories = JSON.parse(categoriesString)
-  }
-
-  const currenciesString = localStorage.getItem('currencies')
-  if (currenciesString !== null) {
-    state.currencies = JSON.parse(currenciesString)
-  }
-
-  const categoryTypesString = localStorage.getItem('categoryTypes')
-  if (categoryTypesString !== null) {
-    state.categoryTypes = JSON.parse(categoryTypesString)
-  }
-
-  const transactionsString = localStorage.getItem('transactions')
-  if (transactionsString !== null) {
-    const transactions: Transaction[] = JSON.parse(transactionsString)
-    transactions.forEach(transaction => {
-      transaction.date = new Date(transaction.date)
-      if(transaction.groupTransactions?.length){
-        transaction.groupTransactions.forEach(gTransaction => { gTransaction.date = new Date(gTransaction.date) })
-      }
-    })
-    state.transactions = transactions
-  }
-
-  return state
-}
-
 export const selectAccounts = (state: RootState) => state.transactionStore.accounts
 export const selectCategories = (state: RootState) => state.transactionStore.categories
 export const selectCurrencies = (state: RootState) => state.transactionStore.currencies
@@ -156,3 +96,64 @@ export const selectCategoryTypes = (state: RootState) => state.transactionStore.
 export const { clearTransactions, setCurrentTransaction } = transactionSlice.actions
 
 export default transactionSlice.reducer
+
+// LOCAL STORAGE:
+
+export const saveTransactionStoreStateToLocalStorage = (action: any) => {
+  const saveToLocalStorage = (key: string, value: any) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  if(setCurrentTransaction.match(action)){
+    saveToLocalStorage('currentTransaction', action.payload);
+  }
+
+  if(initTransactionStore.fulfilled.match(action)){
+    saveToLocalStorage('transactions', action.payload.transactions);
+    saveToLocalStorage('accounts', action.payload.accounts);
+    saveToLocalStorage('categories', action.payload.categories);
+    saveToLocalStorage('categoryTypes', action.payload.categoryTypes);
+    saveToLocalStorage('currencies', action.payload.currencies);
+  }
+
+  // if(loadTransactions.fulfilled.match(action)){
+  //   const transactions = []
+  //   const existingTransactionsString = localStorage.getItem('transactions')
+  //   if(existingTransactionsString != null)
+  //     transactions.push(...JSON.parse(existingTransactionsString))
+
+  //   transactions.push(...action.payload)
+  //   saveToLocalStorage('transactions', transactions);
+  // }
+}
+
+export const loadTransactionStoreStateFromLocalStorage = () : TransactionsState => {
+  const state : TransactionsState = structuredClone(initialState)
+  const loadFromLocalStorage = (key: string, additionalActionOnValue: any = null) => {
+    const localStorageString = localStorage.getItem(key)
+    if (localStorageString !== null) {
+      const value = JSON.parse(localStorageString)
+      if(additionalActionOnValue !== null)
+        additionalActionOnValue(value)
+      state[key] = value
+    }
+  }
+
+  loadFromLocalStorage('currentTransaction', (transaction: Transaction) => {
+    transaction.date = new Date(transaction.date)
+  })
+  loadFromLocalStorage('accounts')
+  loadFromLocalStorage('categories')
+  loadFromLocalStorage('categoryTypes')
+  loadFromLocalStorage('currencies')
+  // loadFromLocalStorage('transactions', (transactions: Transaction[]) => {
+  //   transactions.forEach(transaction => {
+  //     transaction.date = new Date(transaction.date)
+  //     if(transaction.groupTransactions?.length){
+  //       transaction.groupTransactions.forEach(gTransaction => { gTransaction.date = new Date(gTransaction.date) })
+  //     }
+  //   })
+  // })
+
+  return state
+}

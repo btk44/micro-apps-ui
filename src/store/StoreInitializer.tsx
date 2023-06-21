@@ -9,8 +9,10 @@ export default function StoreInitializer() {
     const ownerId = useAppSelector(selectOwnerId)
   
     useEffect(() => {
-      if (!localStorage.getItem(storeLocalStorageKey))
-        dispatch(initTransactionStore({ownerId: ownerId, take: 0, offset: 0}))
+      if (!localStorage.getItem(storeLocalStorageKey)){
+        dispatch(initTransactionStore(ownerId))
+        localStorage.setItem(storeLocalStorageKey, 'initalized')
+      }
     }, []);
 
   return (<></>)
