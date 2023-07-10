@@ -30,7 +30,9 @@ export default function MobileTransactionEdit(){
   }, [transaction]);
 
   function onAmountChange(amount: number): void {
-    setTransaction({ ...transaction, amount: amount })
+    setTransaction({ ...transaction, 
+      amount: transactionCategoryTypeCode === CategoryTypeCode.Income ? amount : -1 * amount
+    })
   }
 
   function onTransactionCategoryTypeChange(categoryTypeCode: string): void {
@@ -86,7 +88,7 @@ export default function MobileTransactionEdit(){
   }
 
   function getAmountTextSize(){
-    var length = transaction.amount.toString().length;
+    var length = Math.abs(transaction.amount).toString().length;
     if (length > 7) return 2
     if (length > 5) return 3
     if (length > 3) return 4
@@ -113,7 +115,7 @@ export default function MobileTransactionEdit(){
       </div>
       <div className='amount-section'>
         <span className='sign'>{ getAmountSign() }</span>
-        <span className={'amount font-size-' + getAmountTextSize()}>{ transaction.amount }</span>
+        <span className={'amount font-size-' + getAmountTextSize()}>{ Math.abs(transaction.amount) }</span>
         <span className='currency'>{ getTransactionCurrencyCode() }</span>
       </div>
       <div className='account-category-section'>
@@ -135,7 +137,7 @@ export default function MobileTransactionEdit(){
           </> }
       </div>
       <div className='calculator-section'>
-        { <Calculator initialValue={transaction.amount} updateValue={onAmountChange}></Calculator> }
+        { <Calculator initialValue={Math.abs(transaction.amount)} updateValue={onAmountChange}></Calculator> }
       </div>
     </div>
   );

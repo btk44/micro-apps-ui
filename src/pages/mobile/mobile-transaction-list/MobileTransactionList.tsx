@@ -3,26 +3,23 @@ import './MobileTransactionList.scss'
 import { useEffect, useState } from 'react';
 import { Transaction } from '../../../objects/Transaction';
 import { useNavigate } from 'react-router-dom';
-import { initTransactionStore, loadTransactions, selectAccounts, selectCategories, selectTransactions } from '../../../store/TransactionSlice';
+import { loadTransactions, selectAccounts, selectCategories, setCurrentTransaction } from '../../../store/TransactionSlice';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { selectOwnerId } from '../../../store/UserSlice';
 
 
 export default function MobileTransactionList(){
-  const transactionPageSize = 5
-  const [transactionsPage, setTransactionsPage] = useState(1)
+  const transactionPageSize = 4
+  const [transactionsPage, setTransactionsPage] = useState(0)
+  const [transactions, setTransactions] = useState([])
 
   const ownerId = useAppSelector(selectOwnerId)
-
   const accounts = useAppSelector(selectAccounts)
   const categories = useAppSelector(selectCategories)
-  const transactions = useAppSelector(selectTransactions)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    loadMoreTransactions()  //fix this
-  }, []);
+  useEffect(() => { loadMoreTransactions() }, []);
 
   function getMainInfoText(transaction: Transaction): string {
     if(transaction.groupTransactions?.length){
@@ -43,12 +40,14 @@ export default function MobileTransactionList(){
 
   function loadMoreTransactions(): void {
     dispatch(loadTransactions({ownerId: ownerId, take: transactionPageSize, 
-      offset: transactionsPage * transactionPageSize }))
+      offset: transactionsPage * transactionPageSize })).then(transactionsResponse => {
+        setTransactions(transactions.concat(transactionsResponse.payload))
+      })
     setTransactionsPage(transactionsPage + 1)
   }
 
   function onTransactionSelected(transaction: Transaction){
-    // set current transaction in store
+    dispatch(setCurrentTransaction(structuredClone(transaction)))
     navigate('/mobile-edit')
   }
 
