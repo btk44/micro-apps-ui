@@ -20,6 +20,7 @@ export default function MobileTransactionEdit(){
   const navigate = useNavigate()
 
   const [transaction, setTransaction] = useState(structuredClone(currentTransaction))
+  const [balanceTransaction, setBalanceTransaction] = useState(getBalanceTransaction())
   const [transactionCategoryTypeCode, setTransactionCategoryTypeCode] = useState(CategoryTypeCode.Expense.toString())
 
   useEffect(() => { setTransactionCategoryTypeCode(
@@ -28,6 +29,13 @@ export default function MobileTransactionEdit(){
   useEffect(() => {
     dispatch(setCurrentTransaction(structuredClone(transaction)))
   }, [transaction]);
+
+  function getBalanceTransaction(){
+    if(currentTransaction.groupKey && currentTransaction.groupTransactions && currentTransaction.groupTransactions.length)
+      return structuredClone(currentTransaction.groupTransactions[0])
+
+    return GetEmptyTransaction()
+  }
 
   function onAmountChange(amount: number): void {
     setTransaction({ ...transaction, 
@@ -95,12 +103,21 @@ export default function MobileTransactionEdit(){
     return 6;
   }
 
-  // function saveTransaction(): void {
-  //   setProgress('saving...')
-  //   TransactionService.SaveTransactions([transaction]).then(
-  //     () => setProgress('done!')
-  //   )
-  // }
+  function saveTransaction(): void {
+    if (isTransfer()){
+      if(!transaction.groupKey)
+        transaction.groupKey = Date.now().toString() + Math.random().toString().substring(3, 10).padEnd(7, '0')
+
+      if(!transaction.groupTransactions || !transaction.groupTransactions.length)
+        transaction.groupTransactions = [structuredClone(transaction)]
+
+      const balanceTransaction = transaction.groupTransactions[0]
+      balanceTransaction.amount = -1 * transaction.amount
+
+    }
+
+    TransactionService.SaveTransactions([transaction])
+  }
 
   return (
     <div className={'mobile-transaction-edit-component component'}>
@@ -125,7 +142,7 @@ export default function MobileTransactionEdit(){
         { isTransfer() && <>
           <button className='arrow'>&#8594;</button> 
           <button onClick={() => navigate(`/mobile-account-picker?isPrimary=false`)}> 
-            { transaction.accountId ? getAccountNameById(transaction.accountId) : 'konto' }
+            { balanceTransaction.accountId ? getAccountNameById(transaction.accountId) : 'konto' }
           </button>
           <input type='text' placeholder={ '1EUR = 14.5235PLN'}></input>
           </> }
@@ -139,6 +156,7 @@ export default function MobileTransactionEdit(){
       <div className='calculator-section'>
         { <Calculator initialValue={Math.abs(transaction.amount)} updateValue={onAmountChange}></Calculator> }
       </div>
+      <button onClick={saveTransaction}>Save</button>
     </div>
   );
 }
