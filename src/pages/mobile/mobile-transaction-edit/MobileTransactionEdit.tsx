@@ -60,7 +60,10 @@ export default function MobileTransactionEdit(){
     const updatedTransaction = structuredClone(transaction)
 
     if (categoryTypeCode === CategoryTypeCode.Transfer)
-      updatedTransaction.groupTransactions = [{ ...GetEmptyTransaction(), amount: -1 * transaction.amount }]
+      if(!updatedTransaction.groupTransactions?.length){
+        updatedTransaction.groupKey = getTransactionGroupKey()
+        updatedTransaction.groupTransactions = [{ ...updatedTransaction, amount: -1 * updatedTransaction.amount }]
+      }
 
     updatedTransaction.categoryId = firstCategoryFromType.id
 
@@ -103,10 +106,14 @@ export default function MobileTransactionEdit(){
     return 6;
   }
 
+  function getTransactionGroupKey() {
+    return Date.now().toString() + Math.random().toString().substring(3, 10).padEnd(7, '0');
+  }
+
   function saveTransaction(): void {
     if (isTransfer()){
       if(!transaction.groupKey)
-        transaction.groupKey = Date.now().toString() + Math.random().toString().substring(3, 10).padEnd(7, '0')
+        transaction.groupKey = getTransactionGroupKey()
 
       if(!transaction.groupTransactions || !transaction.groupTransactions.length)
         transaction.groupTransactions = [structuredClone(transaction)]
@@ -142,7 +149,7 @@ export default function MobileTransactionEdit(){
         { isTransfer() && <>
           <button className='arrow'>&#8594;</button> 
           <button onClick={() => navigate(`/mobile-account-picker?isPrimary=false`)}> 
-            { balanceTransaction.accountId ? getAccountNameById(transaction.accountId) : 'konto' }
+            { balanceTransaction.accountId ? getAccountNameById(balanceTransaction.accountId) : 'konto' }
           </button>
           <input type='text' placeholder={ '1EUR = 14.5235PLN'}></input>
           </> }
