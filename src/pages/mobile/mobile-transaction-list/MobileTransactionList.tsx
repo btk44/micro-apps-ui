@@ -1,7 +1,7 @@
 import './MobileTransactionList.scss'
 
 import { useEffect, useState } from 'react';
-import { Transaction } from '../../../objects/Transaction';
+import { GetEmptyTransaction, Transaction } from '../../../objects/Transaction';
 import { useNavigate } from 'react-router-dom';
 import { loadTransactions, selectAccounts, selectCategories, setCurrentTransaction } from '../../../store/TransactionSlice';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
@@ -39,7 +39,7 @@ export default function MobileTransactionList(){
   }
 
   function loadMoreTransactions(): void {
-    dispatch(loadTransactions({ownerId: ownerId, take: transactionPageSize, 
+    dispatch(loadTransactions({ownerId: ownerId, take: transactionPageSize, active: true, activeDefined: true,
       offset: transactionsPage * transactionPageSize })).then(transactionsResponse => {
         setTransactions(transactions.concat(transactionsResponse.payload))
       })
@@ -53,6 +53,7 @@ export default function MobileTransactionList(){
 
   return (
     <div className='mobile-transaction-list-component component'>
+      <button onClick={() => onTransactionSelected(GetEmptyTransaction())}>new</button>
       <ul>
         { transactions.map((transaction: Transaction) => 
             <li key={transaction.id} /*style={{borderLeftColor: categories[transaction.categoryId].color}}*/ onClick={() => onTransactionSelected(transaction)}>
