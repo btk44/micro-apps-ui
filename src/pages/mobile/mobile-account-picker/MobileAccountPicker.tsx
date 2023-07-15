@@ -2,7 +2,8 @@ import './MobileAccountPicker.scss'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks'
 import { selectAccounts, selectCurrentTransaction, setCurrentTransaction } from '../../../store/TransactionSlice'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useQuery } from '../../../Router'
 import { Account } from '../../../objects/Account'
 
 export default function MobileAccountPicker() {
@@ -10,7 +11,8 @@ export default function MobileAccountPicker() {
   const currentTransaction = useAppSelector(selectCurrentTransaction)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  let { isPrimary } = useParams();
+  const query = useQuery()
+  const isPrimary = query.get('isPrimary') === 'true'
 
   function onAccountSelected(account: Account){
     const modifiedTransaction = structuredClone(currentTransaction)
