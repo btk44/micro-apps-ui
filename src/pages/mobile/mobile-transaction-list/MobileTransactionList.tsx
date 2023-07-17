@@ -1,6 +1,6 @@
 import './MobileTransactionList.scss'
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GetEmptyTransaction, Transaction } from '../../../objects/Transaction';
 import { useNavigate } from 'react-router-dom';
 import { loadTransactions, selectAccounts, selectCategories, setCurrentTransaction } from '../../../store/TransactionSlice';
@@ -10,7 +10,7 @@ import { selectOwnerId } from '../../../store/UserSlice';
 
 export default function MobileTransactionList(){
   const transactionPageSize = 4
-  const [transactionsPage, setTransactionsPage] = useState(0)
+  const transactionsPage = useRef(0)
   const [transactions, setTransactions] = useState([])
 
   const ownerId = useAppSelector(selectOwnerId)
@@ -40,10 +40,10 @@ export default function MobileTransactionList(){
 
   function loadMoreTransactions(): void {
     dispatch(loadTransactions({ownerId: ownerId, take: transactionPageSize, active: true, activeDefined: true,
-      offset: transactionsPage * transactionPageSize })).then(transactionsResponse => {
+      offset: transactionsPage.current * transactionPageSize })).then(transactionsResponse => {
         setTransactions(transactions.concat(transactionsResponse.payload))
       })
-    setTransactionsPage(transactionsPage + 1)
+    transactionsPage.current++
   }
 
   function onTransactionSelected(transaction: Transaction){
